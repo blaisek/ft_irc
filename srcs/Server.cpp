@@ -111,22 +111,8 @@ void	Server::_createClient(void)
 		this->_addPoll(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
         if (bytesRead > 0)
         {
-            // Analyser le contenu du buffer pour extraire le nickname et le user
-            std::string receivedData(buf, bytesRead);
-            // Effectuer l'analyse du contenu selon le format attendu
-
-            // Stocker le nickname et le user dans un objet Client
-            //Client* client = new Client(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
-
-//            this->_clients.insert(std::pair<int, Client *>(new_fd, client));
-            // Envoyer un message de bienvenue au client
-            std::string message = "Welcome to our ft_irc server";
-            if (send(new_fd, message.c_str(), message.length(), 0) < 0)
-                std::cerr << "ERROR: send() error: " << strerror(errno) << std::endl;
             std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
-
         }
-
 	}
 }
 
@@ -168,15 +154,12 @@ void	Server::_handleRequest(int client_index)
 	}
 	else
 	{
-		//std::cout << buffer;
 		// REQUEST HANDLING AND PARSING HAPPENS HERE
         Client *client  = this->_clients[sender_fd];
 		std::istringstream iss(buffer);
             std::string command;
-            std::cout << "iss: " << iss << std::endl;
             while (iss >> command)
             {
-                //printf("command: %s\n", command.c_str());
                 if (command == "NICK")
                 {
                     std::string nickname;
