@@ -10,7 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "irc.hpp"
+
 
 Server::Server(std::string name, int max_online, std::string port, std::string password)
 {
@@ -98,6 +99,7 @@ void	Server::_createClient(void)
 	struct sockaddr	remote_addr;
 	socklen_t		addrlen;
 	int				new_fd;
+    char           buf[512];
 
 	addrlen = sizeof(addrlen);
 	new_fd = accept(this->_socket_fd, (struct sockaddr *)&remote_addr, &addrlen);
@@ -105,17 +107,32 @@ void	Server::_createClient(void)
 		std::cerr << "ERROR: accept() error: " << strerror(errno) << std::endl; // should not kill the server;
 	else
 	{
-		this->_addPoll(new_fd);
+        int bytesRead = recv(new_fd, buf, sizeof(buf), 0);
+		this->_addPoll(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
+        if (bytesRead > 0)
+        {
+            // Analyser le contenu du buffer pour extraire le nickname et le user
+            std::string receivedData(buf, bytesRead);
+            // Effectuer l'analyse du contenu selon le format attendu
 
-		// send a welcome message back to the new client
-		std::string message = "Welcome to our ft_irc server";
-		if (send(new_fd, message.c_str(), message.length(), 0) < 0)
-			std::cerr << "ERROR: send() error: " << strerror(errno) << std::endl;
-		std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in*)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
+            // Stocker le nickname et le user dans un objet Client
+            //Client* client = new Client(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
+
+//            this->_clients.insert(std::pair<int, Client *>(new_fd, client));
+            // Envoyer un message de bienvenue au client
+            std::string message = "Welcome to our ft_irc server";
+            if (send(new_fd, message.c_str(), message.length(), 0) < 0)
+                std::cerr << "ERROR: send() error: " << strerror(errno) << std::endl;
+            std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
+
+        }
+
 	}
 }
 
-void	Server::_addPoll(int fd)
+
+
+void	Server::_addPoll(int fd, std::string ip)
 {
 	if (this->_online_clients == this->_max_online_clients)
 	{
@@ -124,7 +141,7 @@ void	Server::_addPoll(int fd)
 	}
 	this->_pfds[this->_online_clients].fd = fd;
 	this->_pfds[this->_online_clients].events = POLLIN;
-	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
+	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd, ip)));
 	this->_online_clients++;
 }
 
@@ -151,10 +168,37 @@ void	Server::_handleRequest(int client_index)
 	}
 	else
 	{
-		std::cout << buffer;
+		//std::cout << buffer;
 		// REQUEST HANDLING AND PARSING HAPPENS HERE
-		std::string message = "Hello m8 how are u doin ?";
-		if (send(sender_fd, message.c_str(), message.length(), 0) < 0)
+        Client *client  = this->_clients[sender_fd];
+		std::istringstream iss(buffer);
+            std::string command;
+            std::cout << "iss: " << iss << std::endl;
+            while (iss >> command)
+            {
+                //printf("command: %s\n", command.c_str());
+                if (command == "NICK")
+                {
+                    std::string nickname;
+                    if (iss >> nickname)
+                    {
+                        // Stocker le nickname dans l'objet Client
+                        client->setNickName(nickname);
+                    }
+                }
+                else if (command == "USER")
+                {
+                    std::string user;
+                    if (iss >> user)
+                    {
+                        // Stocker le user dans l'objet Client
+                        client->setUserName(user);
+                    }
+                }
+            }
+        std::string message = "Welcome to our ft_irc server";
+        std::string ret = ":" + this->_name +  " " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
+		if (send(sender_fd, ret.c_str(), ret.length(), 0) < 0)
 			std::cout << "ERROR send() error: " << strerror(errno) << std::endl;
 	}
 	memset(&buffer, 0, sizeof(buffer));

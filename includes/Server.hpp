@@ -39,7 +39,7 @@ class Server
 
 		void					_socketInit(std::string port);
 		void					_createClient(void);
-		void					_addPoll(int fd);
+		void					_addPoll(int fd, std::string ip);
 		void					_removePoll(int i);
 		void					_handleRequest(int client_index);
 

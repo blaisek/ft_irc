@@ -1,3 +1,9 @@
 **/objs/
 **/**.o
 ircserv
+.idea
+.vscode
+.DS_Store
+*.o
+*.dSYM
+*.out
