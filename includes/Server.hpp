@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 10:41:51 by saeby             #+#    #+#             */
-/*   Updated: 2023/05/30 14:08:31 by saeby            ###   ########.fr       */
+/*   Updated: 2023/05/30 14:55:40 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,9 @@ class Server
 
 		void					_socketInit(std::string port);
 		void					_createClient(void);
+		void					_addPoll(int fd);
+		void					_removePoll(int i);
+		void					_handleRequest(int client_index);
 
 };
 

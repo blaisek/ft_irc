@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 10:41:45 by saeby             #+#    #+#             */
-/*   Updated: 2023/05/30 14:17:20 by saeby            ###   ########.fr       */
+/*   Updated: 2023/05/30 14:56:07 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void	Server::start(void)
 				if (this->_pfds[i].fd == this->_socket_fd)
 					this->_createClient();
 				else
-					std::cout << "Handle request" << std::endl;
+					this->_handleRequest(i);
 			}
 		}
 	}
@@ -105,12 +105,7 @@ void	Server::_createClient(void)
 		std::cerr << "ERROR: accept() error: " << strerror(errno) << std::endl; // should not kill the server;
 	else
 	{
-		// Add new_fd to _pfds[]
-		// check if max online is reached
-		// 		if reached, realloc to accomodate twice this number
-		// insert a std::pair<new_fd, Client *> into _clients
-		// Increase online client count
-		// All of the above can be done in a separate function
+		this->_addPoll(new_fd);
 
 		// send a welcome message back to the new client
 		std::string message = "Welcome to our ft_irc server";
@@ -118,4 +113,49 @@ void	Server::_createClient(void)
 			std::cerr << "ERROR: send() error: " << strerror(errno) << std::endl;
 		std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in*)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
 	}
+}
+
+void	Server::_addPoll(int fd)
+{
+	if (this->_online_clients == this->_max_online_clients)
+	{
+		this->_max_online_clients *= 2;
+		this->_pfds = (struct pollfd *)realloc(this->_pfds, this->_max_online_clients);
+	}
+	this->_pfds[this->_online_clients].fd = fd;
+	this->_pfds[this->_online_clients].events = POLLIN;
+	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
+	this->_online_clients++;
+}
+
+void	Server::_removePoll(int i)
+{
+	close(this->_pfds[i].fd);
+	this->_pfds[i] = this->_pfds[this->_online_clients - 1];
+	this->_clients.erase(this->_pfds[i].fd);
+	this->_online_clients--;
+}
+
+void	Server::_handleRequest(int client_index)
+{
+	char	buffer[512]; // messages shall not exceed 512 characters following IRC protocol
+	int		sender_fd, n;
+
+	sender_fd = this->_pfds[client_index].fd;
+	n = recv(sender_fd, buffer, sizeof(buffer), 0); // N is the number of bytes received
+
+	if (n <= 0)
+	{
+		close(sender_fd);
+		this->_removePoll(client_index);
+	}
+	else
+	{
+		std::cout << buffer;
+		// REQUEST HANDLING AND PARSING HAPPENS HERE
+		std::string message = "Hello m8 how are u doin ?";
+		if (send(sender_fd, message.c_str(), message.length(), 0) < 0)
+			std::cout << "ERROR send() error: " << strerror(errno) << std::endl;
+	}
+	memset(&buffer, 0, sizeof(buffer));
 }
