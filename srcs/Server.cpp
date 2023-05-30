@@ -94,27 +94,63 @@ void	Server::_socketInit(std::string port)
 		error("ERROR listening on socket", 1);
 }
 
-void	Server::_createClient(void)
+void Server::_createClient(void)
 {
-	struct sockaddr	remote_addr;
-	socklen_t		addrlen;
-	int				new_fd;
-    char           buf[512];
+    struct sockaddr remote_addr;
+    socklen_t addrlen;
+    int new_fd;
+    char buf[512];
 
-	addrlen = sizeof(addrlen);
-	new_fd = accept(this->_socket_fd, (struct sockaddr *)&remote_addr, &addrlen);
-	if (new_fd == -1)
-		std::cerr << "ERROR: accept() error: " << strerror(errno) << std::endl; // should not kill the server;
-	else
-	{
-        int bytesRead = recv(new_fd, buf, sizeof(buf), 0);
-		this->_addPoll(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
-        if (bytesRead > 0)
+    addrlen = sizeof(addrlen);
+    new_fd = accept(this->_socket_fd, (struct sockaddr *)&remote_addr, &addrlen);
+    if (new_fd == -1)
+    {
+        std::cerr << "ERROR: accept() error: " << strerror(errno) << std::endl;
+        return;
+    }
+
+    memset(buf, 0, sizeof(buf));
+    int bytesRead = recv(new_fd, buf, sizeof(buf) - 1, 0);
+    if (bytesRead > 0)
+    {
+        std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
+        Client *client = new Client(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
+        std::istringstream iss(buf);
+        std::string command;
+        while (iss >> command)
         {
-            std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
+            if (command == "NICK")
+            {
+                std::string nickname;
+                if (iss >> nickname)
+                {
+                    // Stocker le nickname dans l'objet Client
+                    client->setNickName(nickname);
+                }
+            }
+            else if (command == "USER")
+            {
+                std::string user;
+                if (iss >> user)
+                {
+                    // Stocker le user dans l'objet Client
+                    client->setUserName(user);
+                }
+            }
         }
-	}
+
+        std::string message = "Welcome to our ft_irc server";
+        std::string ret = ":" + this->_name + " 001 " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
+        if (send(new_fd, ret.c_str(), ret.length(), 0) < 0)
+        {
+            std::cout << "ERROR send() error: " << strerror(errno) << std::endl;
+            close(new_fd);
+        }
+    }
 }
+
+
+
 
 
 
@@ -139,50 +175,50 @@ void	Server::_removePoll(int i)
 	this->_online_clients--;
 }
 
-void	Server::_handleRequest(int client_index)
+void Server::_handleRequest(int client_index)
 {
-	char	buffer[512]; // messages shall not exceed 512 characters following IRC protocol
-	int		sender_fd, n;
+    char buffer[512]; // messages shall not exceed 512 characters following IRC protocol
+    int sender_fd, n;
 
-	sender_fd = this->_pfds[client_index].fd;
-	n = recv(sender_fd, buffer, sizeof(buffer), 0); // N is the number of bytes received
+    sender_fd = this->_pfds[client_index].fd;
+    n = recv(sender_fd, buffer, sizeof(buffer), 0); // N is the number of bytes received
 
-	if (n <= 0)
-	{
-		close(sender_fd);
-		this->_removePoll(client_index);
-	}
-	else
-	{
-		// REQUEST HANDLING AND PARSING HAPPENS HERE
-        Client *client  = this->_clients[sender_fd];
-		std::istringstream iss(buffer);
-            std::string command;
-            while (iss >> command)
+    if (n <= 0)
+    {
+        close(sender_fd);
+        this->_removePoll(client_index);
+    }
+    else
+    {
+        // REQUEST HANDLING AND PARSING HAPPENS HERE
+        /*Client* client = this->_clients[sender_fd];
+        std::istringstream iss(buffer);
+        std::string command;
+        while (iss >> command)
+        {
+            if (command == "NICK")
             {
-                if (command == "NICK")
+                std::string nickname;
+                if (iss >> nickname)
                 {
-                    std::string nickname;
-                    if (iss >> nickname)
-                    {
-                        // Stocker le nickname dans l'objet Client
-                        client->setNickName(nickname);
-                    }
-                }
-                else if (command == "USER")
-                {
-                    std::string user;
-                    if (iss >> user)
-                    {
-                        // Stocker le user dans l'objet Client
-                        client->setUserName(user);
-                    }
+                    // Stocker le nickname dans l'objet Client
+                    client->setNickName(nickname);
                 }
             }
+            else if (command == "USER")
+            {
+                std::string user;
+                if (iss >> user)
+                {
+                    // Stocker le user dans l'objet Client
+                    client->setUserName(user);
+                }
+            }
+        }
         std::string message = "Welcome to our ft_irc server";
-        std::string ret = ":" + this->_name +  " " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
-		if (send(sender_fd, ret.c_str(), ret.length(), 0) < 0)
-			std::cout << "ERROR send() error: " << strerror(errno) << std::endl;
-	}
-	memset(&buffer, 0, sizeof(buffer));
+        std::string ret = ":" + this->_name + " 001 " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
+        if (send(sender_fd, ret.c_str(), ret.length(), 0) < 0)
+            std::cout << "ERROR send() error: " << strerror(errno) << std::endl;*/
+    }
+    memset(&buffer, 0, sizeof(buffer));
 }

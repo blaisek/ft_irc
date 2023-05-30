@@ -89,3 +89,8 @@ std::string Client::getHost(void) const
 {
     return (this->_host);
 }
+
+void Client::setHost(std::string host)
+{
+    this->_host = host;
+}

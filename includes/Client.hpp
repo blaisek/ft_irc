@@ -28,6 +28,7 @@ class Client
         void setNickName(std::string nick_name);
         void setUserName(std::string user_name);
         void setRealName(std::string real_name);
+        void setHost(std::string host);
 		~Client();
 
 	private:
@@ -38,7 +39,7 @@ class Client
 		int									_client_fd;
 		bool								_authenticated;
 		bool								_is_operator;
-		const std::string					_host;
+		std::string					        _host;
 
         void insert(std::pair<int, Client *>);
 		// std::map<Channel *, bool[]>			_channels; // channels pointers with modes array for specific channel
