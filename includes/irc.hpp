@@ -28,6 +28,8 @@
 # include <map>
 # include "Server.hpp"
 # include "Client.hpp"
+# include <fstream>
+# include <sstream>
 
 // | ================== Defines ================= |
 

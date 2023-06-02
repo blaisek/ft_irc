@@ -16,7 +16,7 @@ OBJ := $(SRC:%.cpp=%.o)
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ))
 
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
 # CXXFLAGS = -std=c++98
 
 all: $(NAME)

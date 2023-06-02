@@ -13,7 +13,7 @@
 #include "irc.hpp"
 #include "Client.hpp"
 
-Client::Client(int fd) : _host(HOSTNAME)
+Client::Client(int fd, std::string host) : _host(host)
 {
 	this->_client_fd = fd;
 	this->_authenticated = false;
@@ -50,3 +50,47 @@ Client::~Client(void)
 	return ;
 }
 
+void Client::setNickName(std::string nick_name)
+{
+    this->_nick_name = nick_name;
+}
+
+void Client::setUserName(std::string user_name)
+{
+    this->_user_name = user_name;
+}
+
+void Client::setRealName(std::string real_name)
+{
+    this->_real_name = real_name;
+}
+
+std::string Client::getNickName(void) const
+{
+    return (this->_nick_name);
+}
+
+std::string Client::getUserName(void) const
+{
+    return (this->_user_name);
+}
+
+std::string Client::getRealName(void) const
+{
+    return (this->_real_name);
+}
+
+void Client::insert(std::pair<int, Client *> client)
+{
+    this->_clients.insert(client);
+}
+
+std::string Client::getHost(void) const
+{
+    return (this->_host);
+}
+
+void Client::setHost(std::string host)
+{
+    this->_host = host;
+}
