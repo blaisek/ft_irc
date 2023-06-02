@@ -108,39 +108,21 @@ void Server::_createClient(void)
         std::cerr << "ERROR: accept() error: " << strerror(errno) << std::endl;
         return;
     }
+    // On crée un nouvel objet Client
+    Client *client = new Client(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
+    // On ajoute le nouveau client dans le tableau de pollfd
+    this->_clients.insert(std::make_pair(new_fd,client));
+    this->_addPoll(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
 
     memset(buf, 0, sizeof(buf));
     int bytesRead = recv(new_fd, buf, sizeof(buf) - 1, 0);
     if (bytesRead > 0)
     {
         std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr) << " on socket " << new_fd << std::endl;
-        Client *client = new Client(new_fd, inet_ntoa(((struct sockaddr_in *)&remote_addr)->sin_addr));
-        std::istringstream iss(buf);
-        std::string command;
-        while (iss >> command)
-        {
-            if (command == "NICK")
-            {
-                std::string nickname;
-                if (iss >> nickname)
-                {
-                    // Stocker le nickname dans l'objet Client
-                    client->setNickName(nickname);
-                }
-            }
-            else if (command == "USER")
-            {
-                std::string user;
-                if (iss >> user)
-                {
-                    // Stocker le user dans l'objet Client
-                    client->setUserName(user);
-                }
-            }
-        }
 
-        std::string message = "Welcome to our ft_irc server";
-        std::string ret = ":" + this->_name + " 001 " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
+        std::string message = "Welcome to the Internet Relay Network";
+
+        std::string ret = this->_name + " " + RPL_WELCOME + " "+ message + " " + "@" + client->getHost() + "\r\n";
         if (send(new_fd, ret.c_str(), ret.length(), 0) < 0)
         {
             std::cout << "ERROR send() error: " << strerror(errno) << std::endl;
@@ -148,11 +130,6 @@ void Server::_createClient(void)
         }
     }
 }
-
-
-
-
-
 
 void	Server::_addPoll(int fd, std::string ip)
 {
@@ -191,7 +168,7 @@ void Server::_handleRequest(int client_index)
     else
     {
         // REQUEST HANDLING AND PARSING HAPPENS HERE
-        /*Client* client = this->_clients[sender_fd];
+        Client* client = this->_clients[sender_fd];
         std::istringstream iss(buffer);
         std::string command;
         while (iss >> command)
@@ -203,6 +180,8 @@ void Server::_handleRequest(int client_index)
                 {
                     // Stocker le nickname dans l'objet Client
                     client->setNickName(nickname);
+                    std::string message = "Your Nickname has been set to " + nickname + " !" + "\r\n";
+                     send(sender_fd, message.c_str(), message.length(), 0);
                 }
             }
             else if (command == "USER")
@@ -212,13 +191,12 @@ void Server::_handleRequest(int client_index)
                 {
                     // Stocker le user dans l'objet Client
                     client->setUserName(user);
+                    std::string message = "Your Username has been set to " + user + " !" + "\r\n";
+                     send(sender_fd, message.c_str(), message.length(), 0);
                 }
             }
         }
-        std::string message = "Welcome to our ft_irc server";
-        std::string ret = ":" + this->_name + " 001 " + message + " " + client->getNickName() + "!" + client->getUserName() + "@" + client->getHost() + "\r\n";
-        if (send(sender_fd, ret.c_str(), ret.length(), 0) < 0)
-            std::cout << "ERROR send() error: " << strerror(errno) << std::endl;*/
+
     }
     memset(&buffer, 0, sizeof(buffer));
 }
