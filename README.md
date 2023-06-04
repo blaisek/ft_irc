@@ -36,7 +36,7 @@ To connect to the server, you can use:
     - **PORT**: The PORT that the server listening on.
   - You can also use an IRC Client e.g irssi, WeeChat...
 
-# 🧠 Contributers
+# 🧠 Contributors
 
 [Simon Aeby](https://github.com/Laendrun)<br/>
 &emsp;42intra profile : [saeby](https://profile.intra.42.fr/users/saeby) <br/>
