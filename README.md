@@ -41,7 +41,7 @@ To connect to the server, you can use:
 [Simon Aeby](https://github.com/Laendrun)<br/>
 &emsp;42intra profile : [saeby](https://profile.intra.42.fr/users/saeby) <br/>
 <br/>
-[Blaise Kalonda Tchimanga](https://github.com/blaisek)<br/>
+[Blaze Kalonda](https://github.com/blaisek)<br/>
 &emsp;42intra profile : [btchiman](https://profile.intra.42.fr/users/btchiman) <br/>
 <br/>
 
@@ -59,3 +59,8 @@ To connect to the server, you can use:
 * [IRSSI client](https://irssi.org/)
 * [Basic IRC command](https://www.mirc.com/help/html/index.html?basic_irc_commands.html)
 
+
+# 🔬 Schema 
+<img src="assets/irc-shema.png">
+<br/>
+<img src="assets/network.png">
