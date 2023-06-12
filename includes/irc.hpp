@@ -26,8 +26,10 @@
 # include <netdb.h>
 # include <poll.h>
 # include <map>
+# include <vector>
 # include "Server.hpp"
 # include "Client.hpp"
+# include "Channel.hpp"
 # include <fstream>
 # include <sstream>
 

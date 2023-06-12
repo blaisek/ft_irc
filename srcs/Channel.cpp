@@ -64,8 +64,6 @@ void Channel::removeClient(Client *client)
         this->_clients.erase(it);
 }
 
-
-
 std::vector<Client *> Channel::getClients(void) const
 {
     return (this->_clients);
@@ -79,4 +77,53 @@ void Channel::setPassword(std::string password)
 std::string Channel::getPassword(void) const
 {
     return (this->_password);
+}
+
+void Channel::setMode(char mode)
+{
+    this->_mode = mode;
+}
+
+char Channel::getMode(void) const
+{
+    return (this->_mode);
+}
+
+void Channel::addOperator(Client *client)
+{
+    this->_operators.push_back(client);
+}
+
+std::vector<Client *> Channel::getOperators(void) const
+{
+    return (this->_operators);
+}
+
+void Channel::removeOperator(Client *client)
+{
+    std::vector<Client *>::iterator it;
+
+    it = std::find(this->_operators.begin(), this->_operators.end(), client);
+    if (it != this->_operators.end())
+        this->_operators.erase(it);
+}
+
+void Channel::addBanned(int fd)
+{
+    this->_banned.push_back(fd);
+}
+
+std::vector<int> Channel::getBanned(void) const
+{
+    return (this->_banned);
+}
+
+void Channel::addInvite(int fd)
+{
+    this->_invite.push_back(fd);
+}
+
+std::vector<int> Channel::getInvite(void) const
+{
+    return (this->_invite);
 }
