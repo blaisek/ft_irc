@@ -196,7 +196,12 @@ void Server::_handleRequest(int client_index)
                 }
             }
         }
-
     }
     memset(&buffer, 0, sizeof(buffer));
+}
+
+void Server::_createChannel(std::string channel_name)
+{
+    Channel *channel = new Channel(channel_name);
+    this->_channels.insert(std::make_pair(channel_name, channel));
 }
