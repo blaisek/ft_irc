@@ -10,6 +10,7 @@ SRC =	main.cpp \
 		utils.cpp \
 		Server.cpp \
 		Client.cpp \
+		Channel.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
 

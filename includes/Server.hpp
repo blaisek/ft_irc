@@ -15,6 +15,7 @@
 # include "irc.hpp"
 
 class Client;
+class Channel;
 
 class Server
 {
@@ -36,13 +37,14 @@ class Server
 		int						_online_clients;
 		int						_max_online_clients;
 		std::map<int, Client *>	_clients;
+        std::map<std::string, Channel *> _channels;
 
-		void					_socketInit(std::string port);
+        void					_socketInit(std::string port);
 		void					_createClient(void);
+        void                    _createChannel(std::string name);
 		void					_addPoll(int fd, std::string ip);
 		void					_removePoll(int i);
 		void					_handleRequest(int client_index);
-
 };
 
 #endif
