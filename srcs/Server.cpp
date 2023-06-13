@@ -202,6 +202,13 @@ void Server::_handleRequest(int client_index)
 
 void Server::_createChannel(std::string channel_name)
 {
-    Channel *channel = new Channel(channel_name);
-    this->_channels.insert(std::make_pair(channel_name, channel));
+    if (this->_channels.find(channel_name) == this->_channels.end())
+    {
+        Channel *channel = new Channel(channel_name);
+        this->_channels.insert(std::make_pair(channel_name, channel));
+    }
+    else {
+        std::string message = "ERROR: channel already exists";
+        send(this->_pfds[0].fd, message.c_str(), message.length(), 0);
+    }
 }
