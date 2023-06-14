@@ -25,6 +25,7 @@ class Client
         std::string getUserName(void) const;
         std::string getRealName(void) const;
         std::string getHost(void) const;
+        int getClientFd(void) const;
         void setNickName(std::string nick_name);
         void setUserName(std::string user_name);
         void setRealName(std::string real_name);

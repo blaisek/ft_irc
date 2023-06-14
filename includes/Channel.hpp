@@ -20,10 +20,8 @@ class Client;
 class Channel
 {
     public:
-        Channel(void);
+
         Channel(std::string name);
-        Channel(const Channel& other);
-        Channel &operator=(const Channel &other);
         ~Channel();
 
         std::string getName(void) const;
@@ -47,6 +45,10 @@ class Channel
         std::vector<int> getInvite(void) const;
 
     private:
+        Channel(void);
+        Channel(const Channel& other);
+        Channel &operator=(const Channel &other);
+
         std::string _name;
         std::string _topic;
         std::string _password;
@@ -55,6 +57,7 @@ class Channel
         std::vector<Client *> _operators;
         std::vector<int> _banned;
         std::vector<int> _invite;
+        Client *_creator;
 };
 
 

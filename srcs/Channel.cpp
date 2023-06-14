@@ -19,6 +19,7 @@ Channel::Channel(void)
 
 Channel::Channel(std::string name) : _name(name)
 {
+    // Par exemple, initialiser d'autres attributs du canal, configurer des paramètres, etc.
     return ;
 }
 

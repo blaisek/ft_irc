@@ -94,3 +94,8 @@ void Client::setHost(std::string host)
 {
     this->_host = host;
 }
+
+int Client::getClientFd(void) const
+{
+    return (this->_client_fd);
+}

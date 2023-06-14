@@ -195,6 +195,17 @@ void Server::_handleRequest(int client_index)
                      send(sender_fd, message.c_str(), message.length(), 0);
                 }
             }
+            else if (command == "/JOIN")
+            {
+                std::string channel_name;
+                if (iss >> channel_name)
+                    _createChannel(iss.str());
+                else
+                {
+                    std::string message = "ERROR: no channel name specified";
+                    send(sender_fd, message.c_str(), message.length(), 0);
+                }
+            }
         }
     }
     memset(&buffer, 0, sizeof(buffer));
@@ -206,9 +217,19 @@ void Server::_createChannel(std::string channel_name)
     {
         Channel *channel = new Channel(channel_name);
         this->_channels.insert(std::make_pair(channel_name, channel));
+
+        // ajout du client au canal, etc.
+        /*
+         * this->_channels[channel_name]->addClient(client);
+            client->addChannel(channel_name);
+         */
+        // Envoie d'un message de confirmation au client
+        std::string message = "You have joined the channel: " + channel_name + "\r\n";
+        send(this->_pfds[0].fd, message.c_str(), message.length(), 0);
     }
     else {
-        std::string message = "ERROR: channel already exists";
+        std::string message = "ERROR: Channel already exists";
         send(this->_pfds[0].fd, message.c_str(), message.length(), 0);
     }
 }
+
