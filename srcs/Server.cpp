@@ -173,6 +173,11 @@ void Server::_handleRequest(int client_index)
         std::string command;
         while (iss >> command)
         {
+            if (command == "PING")
+            {
+                std::string pong = "PONG " + this->_name + "\r\n";
+                send(sender_fd, pong.c_str(), pong.length(), 0);
+            }
             if (command == "NICK")
             {
                 std::string nickname;
@@ -192,13 +197,13 @@ void Server::_handleRequest(int client_index)
                     // Stocker le user dans l'objet Client
                     client->setUserName(user);
                     std::string message = "Your Username has been set to " + user + " !" + "\r\n";
-                     send(sender_fd, message.c_str(), message.length(), 0);
+                    send(sender_fd, message.c_str(), message.length(), 0);
                 }
             }
-            else if (command == "/JOIN")
+            else if (command == "/join")
             {
                 std::string channel_name;
-                if (iss >> channel_name)
+                if (iss >> channel_name && (channel_name[0] == '#') && channel_name.length() > 1 && channel_name.length() < 51)
                     _createChannel(iss.str());
                 else
                 {
@@ -213,16 +218,13 @@ void Server::_handleRequest(int client_index)
 
 void Server::_createChannel(std::string channel_name)
 {
+    std::transform(channel_name.begin(), channel_name.end(), channel_name.begin(), ::tolower);
     if (this->_channels.find(channel_name) == this->_channels.end())
     {
         Channel *channel = new Channel(channel_name);
         this->_channels.insert(std::make_pair(channel_name, channel));
-
-        // ajout du client au canal, etc.
-        /*
-         * this->_channels[channel_name]->addClient(client);
-            client->addChannel(channel_name);
-         */
+        // ajout de l'operator au canal, etc.
+        this->_channels[channel_name]->addOperator(this->_clients[this->_pfds[0].fd]);
         // Envoie d'un message de confirmation au client
         std::string message = "You have joined the channel: " + channel_name + "\r\n";
         send(this->_pfds[0].fd, message.c_str(), message.length(), 0);

@@ -19,7 +19,7 @@ Channel::Channel(void)
 
 Channel::Channel(std::string name) : _name(name)
 {
-    // Par exemple, initialiser d'autres attributs du canal, configurer des paramètres, etc.
+    // initialiser d'autres attributs du canal, configurer des paramètres, etc.
     return ;
 }
 
@@ -80,12 +80,12 @@ std::string Channel::getPassword(void) const
     return (this->_password);
 }
 
-void Channel::setMode(char mode)
+void Channel::setMode(std::string mode)
 {
     this->_mode = mode;
 }
 
-char Channel::getMode(void) const
+std::string Channel::getMode(void) const
 {
     return (this->_mode);
 }
@@ -127,4 +127,13 @@ void Channel::addInvite(int fd)
 std::vector<int> Channel::getInvite(void) const
 {
     return (this->_invite);
+}
+
+void Channel::removeBanned(int fd)
+{
+    std::vector<int>::iterator it;
+
+    it = std::find(this->_banned.begin(), this->_banned.end(), fd);
+    if (it != this->_banned.end())
+        this->_banned.erase(it);
 }
