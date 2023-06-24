@@ -47,6 +47,7 @@ $capClass::$capClass(void)
 $capClass::$capClass(const $capClass &other)
 {
 	std::cout << "Copy constructor called" << std::endl;
+	(void) other;
 	return ;
 }
 
@@ -54,6 +55,7 @@ $capClass::$capClass(const $capClass &other)
 $capClass &$capClass::operator=(const $capClass &other)
 {
 	std::cout << "Assignment operator called" << std::endl;
+	(void) other;
 	return (*this);
 }
 

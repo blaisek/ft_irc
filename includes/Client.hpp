@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/30 13:58:06 by saeby             #+#    #+#             */
-/*   Updated: 2023/05/30 14:05:58 by saeby            ###   ########.fr       */
+/*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
+/*   Updated: 2023/06/25 00:15:40 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,34 +18,40 @@ class Client
 {
 	public:
 		Client(void);
-		Client(int fd, std::string host);
+		Client(int fd);
 		Client(const Client& other);
 		Client &operator=(const Client &other);
-        std::string getNickName(void) const;
-        std::string getUserName(void) const;
-        std::string getRealName(void) const;
-        std::string getHost(void) const;
-        void setNickName(std::string nick_name);
-        void setUserName(std::string user_name);
-        void setRealName(std::string real_name);
-        void setHost(std::string host);
 		~Client();
 
-	private:
-		std::string							_nick_name;
-		std::string							_user_name;
-		std::string							_real_name;
-        std::map <int, Client *>			_clients;
-		int									_client_fd;
-		bool								_authenticated;
-		bool								_is_operator;
-		std::string					        _host;
+		int			getFd(void) const;
+		bool		isAuth(void) const;
+		std::string	getNick(void) const;
+		std::string	getUser(void) const;
+		std::string	getIdentity(void) const;
+		std::string	getHost(void) const;
+		bool		getReg(void) const;
+		std::string	getFullName(void) const;
 
-        void insert(std::pair<int, Client *>);
-		// std::map<Channel *, bool[]>			_channels; // channels pointers with modes array for specific channel
+		void		setAuth(bool auth);
+		void		setNick(std::string nick);
+		void		setUser(std::string user);
+		void		setIdentity(std::string identity);
+		void		setHost(std::string host);
+		void		setReg(bool reg);
+		void		setFullName(std::string fullname);
+
+	private:
+		int			_fd;
+		bool		_auth;
+		std::string	_nick;
+		std::string	_user;
+		std::string	_identity;
+		std::string	_host;
+		bool		_reg;
+		std::string	_fullName;
 };
 
+std::ostream	&operator<<(std::ostream const &o, Client &c);
+
 #endif
-
-
 
