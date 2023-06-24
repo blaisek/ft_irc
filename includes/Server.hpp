@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:04:42 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/25 00:40:21 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 
 class Client;
 class Request;
+class Channel;
 
 class Server
 {
@@ -34,14 +35,15 @@ class Server
 		void			start(void);
 
 	private:
-		std::string					_name;
-		std::string					_pass;
-		int							_socket;
-		int							_online;
-		int							_max_online;
-		struct pollfd				*_poll_fds;
-		std::map<int, Client *>		_clients;
-		std::vector<std::string>	_nicknames;
+		std::string							_name;
+		std::string							_pass;
+		int									_socket;
+		int									_online;
+		int									_max_online;
+		struct pollfd						*_poll_fds;
+		std::map<int, Client *>				_clients;
+		std::map<std::string, Channel *>	_channels;
+		std::vector<std::string>			_nicknames;
 
 		void					_init_socket(std::string port);
 		void					_create_client(void);
@@ -49,6 +51,7 @@ class Server
 		void					_handle_request(int i);
 		std::string				_get_message(std::string nick, std::string code, std::string message);
 		std::string				_reply(Request req, int fd);
+		void					_createChannel(std::string name);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);

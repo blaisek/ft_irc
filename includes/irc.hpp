@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 09:52:46 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/24 22:57:09 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/25 00:43:00 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@
 # include <map>
 # include <vector>
 # include <algorithm>
-# include <fstream>
-# include <sstream>
+# include "Server.hpp"
+# include "Client.hpp"
 # include "Server.hpp"
 # include "Client.hpp"
 # include "IrcParser.hpp"
 # include "Request.hpp"
+# include "Channel.hpp"
 
 // | ================== Defines ================= |
 

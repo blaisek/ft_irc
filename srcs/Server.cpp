@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:28:33 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/25 00:42:42 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,4 +202,17 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	o << "Password: " << s.getPass() << std::endl;
 	o << "========================================" << std::endl;
 	return (o);
+}
+
+void Server::_createChannel(std::string channel_name)
+{
+	if (this->_channels.find(channel_name) == this->_channels.end())
+	{
+		Channel *channel = new Channel(channel_name);
+		this->_channels.insert(std::make_pair(channel_name, channel));
+	}
+	else {
+		std::string message = "ERROR: channel already exists";
+		send(this->_poll_fds[0].fd, message.c_str(), message.length(), 0);
+	}
 }

@@ -13,6 +13,7 @@ SRC =	main.cpp \
 		IrcParser.cpp \
 		Request.cpp \
 		commands.cpp \
+		Channel.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
 
