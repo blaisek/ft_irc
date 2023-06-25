@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:42:42 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/25 11:05:56 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -184,6 +184,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_pass(req, fd));
 	else if (req.cmd == "USER")
 		return (this->_cmd_user(req, fd));
+	else if (req.cmd == "PING")
+		return (this->_cmd_ping(req, fd));
 	else
 		return ("Unknown command\r\n");
 }

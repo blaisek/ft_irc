@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:30:31 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/25 11:06:16 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,4 +108,13 @@ std::string	Server::_cmd_user(Request& req, int fd)
 		return (this->_get_message(this->_clients[fd]->getNick(), RPL_WELCOME, "You're now registered! " + this->_clients[fd]->getIdentity() + "\r\n"));
 	}
 	return ("");
+}
+
+// 1. check params count (< 1)
+// 2. reply with PONG message
+std::string	Server::_cmd_ping(Request& req, int fd)
+{
+	if (req.params.size() < 1)
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameteres givent.\r\n"));
+	return ("PONG " + req.params[0] + "\r\n");
 }
