@@ -1,31 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
+/*   Request.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/30 09:26:36 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/10 15:45:26 by saeby            ###   ########.fr       */
+/*   Created: 2023/06/16 14:10:00 by saeby             #+#    #+#             */
+/*   Updated: 2023/06/16 16:40:27 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "irc.hpp"
+#ifndef REQUEST_HPP
+# define REQUEST_HPP
+# include <iostream>
+# include <vector>
 
-int	main(int ac, char **av)
+class Request
 {
-	if (ac != 3)
-		error("Usage: ./ircserv <port> <password>", 1);
+	public:
+		Request(void);
 
-	try
-	{
-		Server srv("ft_irc", av[2], av[1], 3);
-		srv.start();
-	}
-	catch (std::exception &e)
-	{
-		std::cerr << e.what() << std::endl;
-	}
+		bool						valid;
+		std::string					og;
+		std::string					prefix;
+		std::string					cmd;
+		std::vector<std::string>	params;
+		int							param_count;
+		std::string					middle;
+		std::string					trailing;
+};
 
-	return (0);
-}
+std::ostream	&operator<<(std::ostream& o, const Request& req);
+
+#endif

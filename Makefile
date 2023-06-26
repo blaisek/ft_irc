@@ -10,6 +10,9 @@ SRC =	main.cpp \
 		utils.cpp \
 		Server.cpp \
 		Client.cpp \
+		IrcParser.cpp \
+		Request.cpp \
+		commands.cpp \
 		Channel.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
@@ -17,7 +20,7 @@ OBJ := $(SRC:%.cpp=%.o)
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ))
 
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Wfatal-errors
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Wfatal-errors -fsanitize=address
 # CXXFLAGS = -std=c++98
 
 all: $(NAME)
