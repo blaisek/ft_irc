@@ -30,6 +30,9 @@ class Channel
         void setTopic(std::string topic);
 
         void removeClient(Client *client);
+        bool hasNickname(std::string nick);
+        void addNickname(std::string nick);
+        void removeNickname(std::string nick);
         void setPassword(std::string password);
         std::string getPassword(void) const;
         void setMode(std::string mode);
@@ -58,6 +61,7 @@ class Channel
         std::vector<Client *> _operators;
         std::vector<int> _banned;
         std::vector<int> _invite;
+        std::vector<std::string> _nicknames;
         Client *_creator;
 };
 

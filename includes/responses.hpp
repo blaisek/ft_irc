@@ -88,5 +88,5 @@
 # define RPL_ADMINLOC1 "257"
 # define RPL_ADMINLOC2 "258"
 # define RPL_ADMINEMAIL "259"
-
+# define RPL_NICKTRACE "309"
 #endif
