@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 11:05:56 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/26 22:33:36 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -186,6 +186,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_user(req, fd));
 	else if (req.cmd == "PING")
 		return (this->_cmd_ping(req, fd));
+	else if (req.cmd == "MODE")
+		return (this->_cmd_mode(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
@@ -217,4 +219,17 @@ void Server::_createChannel(std::string channel_name)
 		std::string message = "ERROR: channel already exists";
 		send(this->_poll_fds[0].fd, message.c_str(), message.length(), 0);
 	}
+}
+
+int	Server::_fdByNick(std::string nick)
+{
+	// std::map<int, Client*>::iterator	it = this->_clients.begin();
+
+	for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if (it->second->getNick() == nick)
+			return (it->first);
+	}
+	// not found
+	return (-1);
 }

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:15:40 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/26 22:23:56 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ class Client
 		std::string	getHost(void) const;
 		bool		getReg(void) const;
 		std::string	getFullName(void) const;
+		std::string	getModes(void) const;
+		bool		isOp(void) const;
 
 		void		setAuth(bool auth);
 		void		setNick(std::string nick);
@@ -49,6 +51,7 @@ class Client
 		std::string	_host;
 		bool		_reg;
 		std::string	_fullName;
+		bool		_srvOperator;
 };
 
 std::ostream	&operator<<(std::ostream const &o, Client &c);

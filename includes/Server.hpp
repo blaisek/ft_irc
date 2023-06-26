@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 11:06:13 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/26 22:32:28 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,12 +52,14 @@ class Server
 		std::string				_get_message(std::string nick, std::string code, std::string message);
 		std::string				_reply(Request req, int fd);
 		void					_createChannel(std::string name);
+		int						_fdByNick(std::string nick);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);
 		std::string				_cmd_pass(Request& req, int fd);
 		std::string				_cmd_user(Request& req, int fd);
 		std::string				_cmd_ping(Request& req, int fd);
+		std::string				_cmd_mode(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

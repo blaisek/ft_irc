@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 11:06:16 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/26 22:34:08 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,4 +117,37 @@ std::string	Server::_cmd_ping(Request& req, int fd)
 	if (req.params.size() < 1)
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameteres givent.\r\n"));
 	return ("PONG " + req.params[0] + "\r\n");
+}
+
+// 1. check if user is registered
+// 2. no param => ERR_NEEDMOREPARAMS
+// 3. one param => based on what irc.freenode.org does
+//     3.1 => if 1st param is current nick, return current user's mode
+//     3.2 => if 1st param is a nick but not current user's nick and current user is not srv operator => cannot view mode of other users
+//     3.3 => if 1st param is a nick but not current user's nick and current user is srv operator => display nick's modes
+//     3.4 => if 1st param is a channel name => display channel's modes
+//     3.5 => else => error not a nick/channel
+// 4. 
+std::string	Server::_cmd_mode(Request& req, int fd)
+{
+	// 1
+	if (!this->_clients[fd]->getReg())
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOTREGISTERED, "You must be registered to do this.\r\n"));
+	// 2
+	if (req.params.size() == 0)
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameters given.\r\n"));
+	// 3
+	if (req.params.size() == 1)
+	{
+		// 3.1
+		if (req.params[0] == this->_clients[fd]->getNick())
+			return (this->_clients[fd]->getModes());
+		// 3.2
+		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
+		{
+			if (this->_clients[fd]->isOp())
+				return (this->_clients[this->_fdByNick(req.params[0])]->getModes());
+		}
+	}
+	return ("");
 }

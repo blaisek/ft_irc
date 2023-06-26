@@ -6,16 +6,16 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:16:03 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/26 22:35:27 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") {}
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false) {}
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") {}
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false) {}
 
 // Copy constructor
 Client::Client(const Client &other)
@@ -45,6 +45,15 @@ std::string	Client::getIdentity(void) const { return (this->_identity); }
 std::string	Client::getHost(void) const { return (this->_host); }
 bool		Client::getReg(void) const { return (this->_reg); }
 std::string	Client::getFullName(void) const { return (this->_fullName); }
+bool		Client::isOp(void) const { return (this->_srvOperator); }
+
+std::string	Client::getModes(void) const
+{
+	std::string	modes;
+
+	modes.append("Displaying users modes\r\n");
+	return (modes);
+}
 
 void		Client::setNick(std::string nick) { this->_nick = nick; }
 void		Client::setUser(std::string user) { this->_user = user; }
