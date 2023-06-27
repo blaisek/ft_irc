@@ -98,18 +98,8 @@ std::string Server::_cmd_nick(Request& req, int fd)
     // 5
     std::string oldNick = this->_clients[fd]->getNick();
     this->_clients[fd]->setNick(req.params[0]);
-    //this->_nicknames.erase(std::find(this->_nicknames.begin(), this->_nicknames.end(), oldNick));
     this->_nicknames.push_back(this->_clients[fd]->getNick());
-    /*
-     * this->_clients[i]->setNickName(request.args[0]);
-	this->_clientNicknames.push_back(this->_clients[i]->getNickName());
-	if (this->_clients[i]->getUserName() != "") {
-		this->_clients[i]->setID(this->_clients[i]->getNickName() + "!" + this->_clients[i]->getUserName() + "@" + this->_clients[i]->getHost());
-		this->_clients[i]->setRegistered(true);
-		return (_printMessage("001", this->_clients[i]->getNickName(), "Welcome to the Internet Relay Network " + this->_clients[i]->getID()));
-	}
-	return ("");
-     */
+
     // Update the nickname in all channels if the client is a member
     for (std::map<std::string, Channel *>::iterator channelIt = this->_channels.begin(); channelIt != this->_channels.end(); ++channelIt)
     {
