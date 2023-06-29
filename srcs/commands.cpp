@@ -23,40 +23,7 @@
 // 7. Check if USER already saved (in case of nickname change) => set user identity <nick>!<user>@<host>
 //     if user identity is saved, reply with the RPL_WELCOME code
 //     else simply return an empty message, the RPL_WELCOME will be sent when going through the USER command
-/*std::string	Server::_cmd_nick(Request& req, int fd)
-{
-	(void) req;
-	// 1
-	if (!this->_clients[fd]->isAuth())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, "You need to authenticate first.\r\n"));
-	// 2
-	if (req.params.size() < 1)
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NONICKNAMEGIVEN, "No nickname given.\r\n"));
-	// 3
-	size_t i = 0;
-	std::string nick = req.params[0];
-	while (nick[i])
-	{
-		int c = nick[i];
-		if (!isalnum(c) && c != '-' && c != '[' && c != ']' && c != '{' && c != '}' && c != '\\' && c != '`' && c != '^')
-			return (this->_get_message(this->_clients[fd]->getNick(), ERR_ERRONEUSNICKNAME, nick + " :Erroneous nickname\r\n"));
-		i++;
-	}
-	// 4
-	if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NICKNAMEINUSE, nick + " :Nickname already used.\r\n"));
-	// 5
-	this->_clients[fd]->setNick(nick);
-	this->_nicknames.push_back(nick);
-	// 6
-	if (this->_clients[fd]->getUser() != "")
-	{
-		this->_clients[fd]->setIdentity(this->_clients[fd]->getNick() + "!" + this->_clients[fd]->getUser() + "@" + this->_clients[fd]->getHost());
-		this->_clients[fd]->setReg(true);
-		return (this->_get_message(this->_clients[fd]->getNick(), RPL_WELCOME, "You're now registered! " + this->_clients[fd]->getIdentity() + "\r\n"));
-	}
-	return ("");
-}*/
+
 std::string Server::_cmd_nick(Request& req, int fd)
 {
     (void) req;

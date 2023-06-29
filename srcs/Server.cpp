@@ -13,7 +13,7 @@
 #include "Server.hpp"
 
 // Default constructor
-Server::Server(void) : _name(), _pass(), _socket(0), _online(0), _max_online(0), _poll_fds(nullptr), _clients() {}
+Server::Server(void) : _name(), _pass(), _socket(0), _online(0), _max_online(10), _poll_fds(nullptr), _clients() {}
 
 Server::Server(std::string name, std::string pass, std::string port, int max) : _name(name), _pass(pass), _max_online(max)
 {
@@ -101,7 +101,7 @@ void	Server::_create_client(void)
 	if (this->_online == this->_max_online)
 	{
 		this->_max_online *= 2;
-		this->_poll_fds = (struct pollfd *)realloc(this->_poll_fds, this->_max_online);
+		this->_poll_fds = (struct pollfd *)realloc(this->_poll_fds, this->_max_online); //possible mistake here
 	}
 	// now we need to add the new file descriptor to the list of all poll fds
 	this->_poll_fds[this->_online].fd = fd;
