@@ -151,3 +151,9 @@ std::string	Server::_cmd_ping(Request& req, int fd)
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameteres givent.\r\n"));
 	return ("PONG " + req.params[0] + "\r\n");
 }
+
+void Server::_cmd_join(Request& req, int fd)
+{
+    std::cout << req.param[0] << std::endl;
+    this->_createChannel(req.param[0],fd);
+}

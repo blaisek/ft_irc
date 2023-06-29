@@ -51,13 +51,14 @@ class Server
 		void					_handle_request(int i);
 		std::string				_get_message(std::string nick, std::string code, std::string message);
 		std::string				_reply(Request req, int fd);
-		void					_createChannel(std::string name);
+		void					_createChannel(std::string name, int fd);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);
 		std::string				_cmd_pass(Request& req, int fd);
 		std::string				_cmd_user(Request& req, int fd);
 		std::string				_cmd_ping(Request& req, int fd);
+        void                    _cmd_join(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

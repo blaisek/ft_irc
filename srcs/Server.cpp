@@ -186,6 +186,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_user(req, fd));
 	else if (req.cmd == "PING")
 		return (this->_cmd_ping(req, fd));
+    else if (req.cmd == "JOIN")
+        return (this->_cmd_join(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
@@ -206,12 +208,13 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	return (o);
 }
 
-void Server::_createChannel(std::string channel_name)
+void Server::_createChannel(std::string channel_name, int fd)
 {
 	if (this->_channels.find(channel_name) == this->_channels.end())
 	{
 		Channel *channel = new Channel(channel_name);
 		this->_channels.insert(std::make_pair(channel_name, channel));
+
 	}
 	else {
 		std::string message = "ERROR: channel already exists";
