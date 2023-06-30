@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/26 22:34:08 by saeby            ###   ########.fr       */
+/*   Updated: 2023/06/30 15:37:47 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,6 +147,8 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 		{
 			if (this->_clients[fd]->isOp())
 				return (this->_clients[this->_fdByNick(req.params[0])]->getModes());
+			else
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, "You do not have rights to see other users' mode.\r\n"));
 		}
 	}
 	return ("");
