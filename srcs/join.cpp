@@ -26,6 +26,7 @@ std::string Server::_cmd_join(Request& req, int fd)
         this->_channels.insert(std::make_pair(channel_name, channel));
     }
     this->_channels[channel_name]->addClient(this->_clients[fd]);
+
     std::string message = ":" + nick + " JOIN " + channel_name + "\n";
 
     // Envoyer le message à tous les utilisateurs du même canal
