@@ -35,8 +35,9 @@ class Channel
         void removeNickname(std::string nick);
         void setPassword(std::string password);
         std::string getPassword(void) const;
-        void setMode(std::string mode);
+        void addMode(std::string mode);
         std::string getMode(void) const;
+        void removeMode(std::string mode);
         void addClient(Client *client);
         std::vector<Client *> getClients(void) const;
         void addOperator(Client *client);
@@ -62,7 +63,6 @@ class Channel
         std::vector<int> _banned;
         std::vector<int> _invite;
         std::vector<std::string> _nicknames;
-        Client *_creator;
 };
 
 

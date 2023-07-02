@@ -38,6 +38,7 @@ Channel &Channel::operator=(const Channel &other)
 
 Channel::~Channel()
 {
+
     return ;
 }
 
@@ -80,9 +81,21 @@ std::string Channel::getPassword(void) const
     return (this->_password);
 }
 
-void Channel::setMode(std::string mode)
+void Channel::addMode(std::string mode)
 {
-    this->_mode = mode;
+    if (_mode.empty() == true)
+        _mode = "+" + mode;
+    else
+        _mode += mode;
+}
+
+void Channel::removeMode(std::string mode)
+{
+    std::string::size_type pos;
+
+    pos = _mode.find(mode);
+    if (pos != std::string::npos)
+        _mode.erase(pos, 1);
 }
 
 std::string Channel::getMode(void) const
@@ -162,4 +175,9 @@ void Channel::removeNickname(std::string nickname)
     it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
     if (it != this->_nicknames.end())
         this->_nicknames.erase(it);
+}
+
+void Channel::setTopic(std::string topic)
+{
+    this->_topic = topic;
 }
