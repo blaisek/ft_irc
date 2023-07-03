@@ -32,9 +32,11 @@ class Channel
         void removeClient(Client *client);
         bool hasNickname(std::string nick);
         void addNickname(std::string nick);
+        std::vector<std::string> getNicknames(void) const;
         void removeNickname(std::string nick);
         void setPassword(std::string password);
         std::string getPassword(void) const;
+        bool hasPassword(void) const;
         void addMode(std::string mode);
         std::string getMode(void) const;
         void removeMode(std::string mode);

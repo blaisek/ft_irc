@@ -168,6 +168,11 @@ void Channel::addNickname(std::string nickname)
     this->_nicknames.push_back(nickname);
 }
 
+std::vector<std::string> Channel::getNicknames(void) const
+{
+    return (this->_nicknames);
+}
+
 void Channel::removeNickname(std::string nickname)
 {
     std::vector<std::string>::iterator it;
@@ -180,4 +185,11 @@ void Channel::removeNickname(std::string nickname)
 void Channel::setTopic(std::string topic)
 {
     this->_topic = topic;
+}
+
+bool Channel::hasPassword(void) const
+{
+    if (this->_password.empty() == true)
+        return (false);
+    return (true);
 }

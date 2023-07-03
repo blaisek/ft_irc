@@ -188,6 +188,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_ping(req, fd));
     else if (req.cmd == "JOIN")
         return (this->_cmd_join(req, fd));
+    /*else if (req.cmd == "PRIVMSG")
+        return (this->_cmd_privmsg(req, fd));*/
 	else
 		return ("Unknown command\r\n");
 }
@@ -208,3 +210,16 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	return (o);
 }
 
+void Server::sendMessageToChannelUsers(const std::string& channel_name, const std::string& message, int fd)
+{
+    Channel *channel = this->_channels[channel_name];
+    std::vector<Client*> clients = channel->getClients();
+    std::vector<Client*>::iterator it;
+    for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        Client *client = *it;
+        int client_fd = client->getFd();
+        if (client_fd != fd)
+            send(client_fd, message.c_str(), message.length(), 0);
+    }
+}

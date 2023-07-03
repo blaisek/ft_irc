@@ -12,35 +12,61 @@
 
 #include "irc.hpp"
 
+
 std::string Server::_cmd_join(Request& req, int fd)
 {
     std::string channel_name = req.params[0];
+    std::string key = req.params[1];
 
     std::string nick = this->_clients[fd]->getNick();
-    if (this->_channels.find(channel_name) == this->_channels.end())
+
+    // check if the channel already exists
+    if (this->_channels.find(channel_name) != this->_channels.end())
     {
-        Channel *channel = new Channel(channel_name);
+        Channel* channel = this->_channels[channel_name];
+
+        // Check if the channel requires a key and if the provided key is correct
+        if (channel->hasPassword() && channel->getPassword() != key)
+        {
+            return (this->_get_message(nick, ERR_BADCHANNELKEY, "Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
+        }
+
+        // Add customer to existing channel
+        channel->addClient(this->_clients[fd]);
+
+        // Send a notification message to other channel users
+        std::string message = ":" + nick + " JOIN " + channel_name + "\n";
+        sendMessageToChannelUsers(channel_name, message, fd);
+
+        return ("");
+    }
+    else
+    {
+        // The channel does not exist, create a new channel
+
+        Channel* channel = new Channel(channel_name);
         channel->addNickname(nick);
+
+        // Check if the channel requires a key
+        if (!key.empty())
+        {
+            channel->setPassword(key);
+        }
+
         channel->addOperator(this->_clients[fd]);
         channel->setTopic("No topic is set");
+
+        // Insert channel into channel list
         this->_channels.insert(std::make_pair(channel_name, channel));
+
+        // Add customer to channel
+        channel->addClient(this->_clients[fd]);
+
+        // Send a notification message to other channel users
+        std::string message = ":" + nick + " JOIN " + channel_name + "\n";
+        sendMessageToChannelUsers(channel_name, message, fd);
+
+        return ("");
     }
-    this->_channels[channel_name]->addClient(this->_clients[fd]);
-
-    std::string message = ":" + nick + " JOIN " + channel_name + "\n";
-
-    // Envoyer le message à tous les utilisateurs du même canal
-    Channel *channel = this->_channels[channel_name];
-    std::vector<Client*> clients = channel->getClients();
-    std::vector<Client*>::iterator it;
-    for (it = clients.begin(); it != clients.end(); ++it)
-    {
-        Client *client = *it;
-        int client_fd = client->getFd();
-        if (client_fd != fd)
-            send(client_fd, message.c_str(), message.length(), 0);
-    }
-
-    return ("");
 }
 

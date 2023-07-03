@@ -33,6 +33,7 @@ class Server
 		std::string		getPass(void) const;
 
 		void			start(void);
+        void            sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
 
 	private:
 		std::string							_name;
@@ -58,6 +59,7 @@ class Server
 		std::string				_cmd_user(Request& req, int fd);
 		std::string				_cmd_ping(Request& req, int fd);
         std::string             _cmd_join(Request& req, int fd);
+        //std::string             _cmd_privmsg(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);
