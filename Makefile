@@ -15,7 +15,7 @@ SRC =	main.cpp \
 		commands.cpp \
 		Channel.cpp \
 		join.cpp \
-
+		privmsg.cpp\
 
 OBJ := $(SRC:%.cpp=%.o)
 

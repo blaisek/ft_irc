@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 11:05:56 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/04 04:14:36 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,8 +188,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_ping(req, fd));
     else if (req.cmd == "JOIN")
         return (this->_cmd_join(req, fd));
-    /*else if (req.cmd == "PRIVMSG")
-        return (this->_cmd_privmsg(req, fd));*/
+    else if (req.cmd == "PRIVMSG")
+        return (this->_cmd_privmsg(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
