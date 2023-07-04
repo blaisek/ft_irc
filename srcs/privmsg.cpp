@@ -19,7 +19,10 @@ std::string Server::_cmd_privmsg(Request& req, int fd)
     std::string nick = this->_clients[fd]->getNick();
 
     std::string message = ":" + nick + " " + trailing + "\n";
+    std::string channels = getChannelNames();
 
+    std::cout << "channel_name: " << channel_name << std::endl;
+    std::cout << "channels: " << channels << std::endl;
     if (this->_channels.find(channel_name) != this->_channels.end())
         sendMessageToChannelUsers(channel_name, message, fd);
     else

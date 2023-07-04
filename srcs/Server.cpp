@@ -223,3 +223,15 @@ void Server::sendMessageToChannelUsers(const std::string& channel_name, const st
             send(client_fd, message.c_str(), message.length(), 0);
     }
 }
+
+std::string Server::getChannelNames(void) const
+{
+    std::string channel_names;
+    std::map<std::string, Channel*>::const_iterator it;
+    for (it = this->_channels.begin(); it != this->_channels.end(); ++it)
+    {
+        channel_names += it->first;
+        channel_names += " ";
+    }
+    return channel_names;
+}

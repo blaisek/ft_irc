@@ -31,6 +31,7 @@ class Server
 		int				getOnline(void) const;
 		int				getMaxOnline(void) const;
 		std::string		getPass(void) const;
+        std::string     getChannelNames(void) const;
 
 		void			start(void);
         void            sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
