@@ -212,6 +212,7 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 
 void Server::sendMessageToChannelUsers(const std::string& channel_name, const std::string& message, int fd)
 {
+    int send_ret;
     Channel *channel = this->_channels[channel_name];
     std::vector<Client*> clients = channel->getClients();
     std::vector<Client*>::iterator it;
@@ -219,8 +220,14 @@ void Server::sendMessageToChannelUsers(const std::string& channel_name, const st
     {
         Client *client = *it;
         int client_fd = client->getFd();
-        if (client_fd != fd)
-            send(client_fd, message.c_str(), message.length(), 0);
+        std::string client_nick = client->getNick();
+        //std::cout << "client_fd: " << client_fd << " client_nick: "<< client_nick << std::endl;
+        if (client_fd != fd){
+            std::cout << "sending " << message << " to client: " << client_nick << std::endl;
+            send_ret = send(client_fd, message.c_str(), message.length(), 0);
+            if (send_ret < 0)
+                std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
     }
 }
 
