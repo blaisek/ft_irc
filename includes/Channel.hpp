@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/06/12 15:49:50 by btchiman         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:18:02 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Channel
         std::string getPassword(void) const;
         void setMode(char mode);
         char getMode(void) const;
+		std::string			getModes(void) const;
         void addClient(Client *client);
         std::vector<Client *> getClients(void) const;
         void addOperator(Client *client);
