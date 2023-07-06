@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 
 	try
 	{
-		Server srv("ft_irc", av[2], av[1], 3);
+		Server srv("ft_irc", av[2], av[1], 10);
 		srv.start();
 	}
 	catch (std::exception &e)

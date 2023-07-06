@@ -31,8 +31,11 @@ class Server
 		int				getOnline(void) const;
 		int				getMaxOnline(void) const;
 		std::string		getPass(void) const;
+        std::string     getChannelNames(void) const;
 
 		void			start(void);
+        void            sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
+        void            sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
 
 	private:
 		std::string							_name;
@@ -61,6 +64,8 @@ class Server
 		std::string				_cmd_pass(Request& req, int fd);
 		std::string				_cmd_user(Request& req, int fd);
 		std::string				_cmd_ping(Request& req, int fd);
+    std::string       _cmd_join(Request& req, int fd);
+    std::string       _cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 };
 
