@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 13:52:25 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 16:31:35 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ class Server
     std::string       _cmd_join(Request& req, int fd);
     std::string       _cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
+		std::string				_cmd_quit(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

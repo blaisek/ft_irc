@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 15:54:32 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 16:38:20 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,3 +226,26 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 	return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel\r\n"));
 	return ("");
 }
+
+std::string	Server::_cmd_quit(Request& req, int fd)
+{
+	unsigned int i = 0;
+	while (this->_poll_fds[i].fd != fd)
+		i++;
+
+	// form quit message
+	std::string	quitmes;
+
+	quitmes.append(":" + this->_clients[fd]->getNick());
+	quitmes.append(" QUIT " + req.trailing + "\r\n");
+	// send quit message to all users on all channels this user has joined
+	// make user leave all channels he's joined
+	// remove nick from server's nicknames list
+	// remove client from poll
+
+	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), this->_clients[fd]->getNick()), this->_nicknames.end());
+	this->_remove_client(i);
+	return (quitmes);
+}
+
+// vec.erase(std::remove(vec.begin(), vec.end(), 8), vec.end());
