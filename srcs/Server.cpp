@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 16:32:08 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 18:07:47 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -189,10 +189,10 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_user(req, fd));
 	else if (req.cmd == "PING")
 		return (this->_cmd_ping(req, fd));
-  else if (req.cmd == "JOIN")
-    return (this->_cmd_join(req, fd));
-  else if (req.cmd == "PRIVMSG")
-    return (this->_cmd_privmsg(req, fd));
+	else if (req.cmd == "JOIN")
+		return (this->_cmd_join(req, fd));
+	else if (req.cmd == "PRIVMSG")
+		return (this->_cmd_privmsg(req, fd));
 	else if (req.cmd == "MODE")
 		return (this->_cmd_mode(req, fd));
 	else if (req.cmd == "QUIT")
