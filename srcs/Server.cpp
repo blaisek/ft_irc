@@ -13,7 +13,7 @@
 #include "Server.hpp"
 
 // Default constructor
-Server::Server(void) : _name(), _pass(), _socket(0), _online(0), _max_online(0), _poll_fds(nullptr), _clients() {}
+Server::Server(void) : _name(), _pass(), _socket(0), _online(0), _max_online(10), _poll_fds(nullptr), _clients() {}
 
 Server::Server(std::string name, std::string pass, std::string port, int max) : _name(name), _pass(pass), _max_online(max)
 {
@@ -101,7 +101,7 @@ void	Server::_create_client(void)
 	if (this->_online == this->_max_online)
 	{
 		this->_max_online *= 2;
-		this->_poll_fds = (struct pollfd *)realloc(this->_poll_fds, this->_max_online);
+		this->_poll_fds = (struct pollfd *)realloc(this->_poll_fds, this->_max_online); //possible mistake here
 	}
 	// now we need to add the new file descriptor to the list of all poll fds
 	this->_poll_fds[this->_online].fd = fd;
@@ -189,6 +189,10 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_user(req, fd));
 	else if (req.cmd == "PING")
 		return (this->_cmd_ping(req, fd));
+  else if (req.cmd == "JOIN")
+    return (this->_cmd_join(req, fd));
+  else if (req.cmd == "PRIVMSG")
+    return (this->_cmd_privmsg(req, fd));
 	else if (req.cmd == "MODE")
 		return (this->_cmd_mode(req, fd));
 	else if (req.cmd == "QUIT")
@@ -213,17 +217,69 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	return (o);
 }
 
-void Server::_createChannel(std::string channel_name)
+void Server::sendMessageToChannelUsers(const std::string& channel_name, const std::string& message, int fd)
 {
-	if (this->_channels.find(channel_name) == this->_channels.end())
-	{
-		Channel *channel = new Channel(channel_name);
-		this->_channels.insert(std::make_pair(channel_name, channel));
-	}
-	else {
-		std::string message = "ERROR: channel already exists";
-		send(this->_poll_fds[0].fd, message.c_str(), message.length(), 0);
-	}
+    int send_ret;
+    Channel *channel = this->_channels[channel_name];
+    std::vector<Client*> clients = channel->getClients();
+    std::vector<Client*>::iterator it;
+    for (it = clients.begin(); it != clients.end(); ++it)
+    {
+        Client *client = *it;
+        int client_fd = client->getFd();
+        std::string client_nick = client->getNick();
+        if (client_fd != fd){
+            send_ret = send(client_fd, message.c_str(), message.length(), 0);
+            if (send_ret < 0)
+                std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
+    }
+}
+
+void Server::sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd)
+{
+    int send_ret;
+    Client* targetClient = NULL;
+
+    // looking for the client by nickname
+    std::map<int, Client*>::iterator it;
+    for (it = this->_clients.begin(); it != this->_clients.end(); ++it)
+    {
+        Client* client = it->second;
+        if (client->getNick() == userNickname)
+        {
+            targetClient = client;
+            break;
+        }
+    }
+
+    if (targetClient != NULL)
+    {
+        int target_fd = targetClient->getFd();
+        if (target_fd != fd)
+        {
+            send_ret = send(target_fd, message.c_str(), message.length(), 0);
+            if (send_ret < 0)
+                std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "User not found: " << userNickname << std::endl;
+    }
+}
+
+
+std::string Server::getChannelNames(void) const
+{
+    std::string channel_names;
+    std::map<std::string, Channel*>::const_iterator it;
+    for (it = this->_channels.begin(); it != this->_channels.end(); ++it)
+    {
+        channel_names += it->first;
+        channel_names += " ";
+    }
+    return channel_names;
 }
 
 int	Server::_fdByNick(std::string nick)

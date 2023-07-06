@@ -19,6 +19,7 @@ Channel::Channel(void)
 
 Channel::Channel(std::string name) : _name(name)
 {
+    // initialiser d'autres attributs du canal, configurer des paramètres, etc.
     return ;
 }
 
@@ -37,6 +38,7 @@ Channel &Channel::operator=(const Channel &other)
 
 Channel::~Channel()
 {
+
     return ;
 }
 
@@ -79,14 +81,21 @@ std::string Channel::getPassword(void) const
     return (this->_password);
 }
 
-void Channel::setMode(char mode)
+void Channel::addMode(std::string mode)
 {
-    this->_mode = mode;
+    if (_mode.empty() == true)
+        _mode = "+" + mode;
+    else
+        _mode += mode;
 }
 
-char Channel::getMode(void) const
+void Channel::removeMode(std::string mode)
 {
-    return (this->_mode);
+    std::string::size_type pos;
+
+    pos = _mode.find(mode);
+    if (pos != std::string::npos)
+        _mode.erase(pos, 1);
 }
 
 std::string	Channel::getModes(void) const
@@ -134,4 +143,56 @@ void Channel::addInvite(int fd)
 std::vector<int> Channel::getInvite(void) const
 {
     return (this->_invite);
+}
+
+void Channel::removeBanned(int fd)
+{
+    std::vector<int>::iterator it;
+
+    it = std::find(this->_banned.begin(), this->_banned.end(), fd);
+    if (it != this->_banned.end())
+        this->_banned.erase(it);
+}
+
+bool Channel::hasNickname(std::string nickname)
+{
+    std::vector<Client *>::iterator it;
+
+    for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+    {
+        if ((*it)->getNick() == nickname)
+            return (true);
+    }
+    return (false);
+}
+
+void Channel::addNickname(std::string nickname)
+{
+    this->_nicknames.push_back(nickname);
+}
+
+std::vector<std::string> Channel::getNicknames(void) const
+{
+    return (this->_nicknames);
+}
+
+void Channel::removeNickname(std::string nickname)
+{
+    std::vector<std::string>::iterator it;
+
+    it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
+    if (it != this->_nicknames.end())
+        this->_nicknames.erase(it);
+}
+
+void Channel::setTopic(std::string topic)
+{
+    this->_topic = topic;
+}
+
+bool Channel::hasPassword(void) const
+{
+    if (this->_password.empty() == true)
+        return (false);
+    return (true);
 }
