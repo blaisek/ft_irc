@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: btchiman <marvin@42lausanne.ch>            +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/06/12 15:50:57 by btchiman         ###   ########.fr       */
+/*   Updated: 2023/06/30 16:17:43 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,14 @@ void Channel::setMode(char mode)
 char Channel::getMode(void) const
 {
     return (this->_mode);
+}
+
+std::string	Channel::getModes(void) const
+{
+	std::string ret;
+	ret = "Channel modes";
+	ret.append("\r\n");
+	return (ret);
 }
 
 void Channel::addOperator(Client *client)

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/26 22:23:56 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/05 22:19:44 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,35 +23,36 @@ class Client
 		Client &operator=(const Client &other);
 		~Client();
 
-		int			getFd(void) const;
-		bool		isAuth(void) const;
-		std::string	getNick(void) const;
-		std::string	getUser(void) const;
-		std::string	getIdentity(void) const;
-		std::string	getHost(void) const;
-		bool		getReg(void) const;
-		std::string	getFullName(void) const;
-		std::string	getModes(void) const;
-		bool		isOp(void) const;
+		int							getFd(void) const;
+		bool						isAuth(void) const;
+		std::string					getNick(void) const;
+		std::string					getUser(void) const;
+		std::string					getIdentity(void) const;
+		std::string					getHost(void) const;
+		bool						getReg(void) const;
+		std::string					getFullName(void) const;
+		std::string					getModes(void) const;
+		bool						isOp(void) const;
 
-		void		setAuth(bool auth);
-		void		setNick(std::string nick);
-		void		setUser(std::string user);
-		void		setIdentity(std::string identity);
-		void		setHost(std::string host);
-		void		setReg(bool reg);
-		void		setFullName(std::string fullname);
+		void						setAuth(bool auth);
+		void						setNick(std::string nick);
+		void						setUser(std::string user);
+		void						setIdentity(std::string identity);
+		void						setHost(std::string host);
+		void						setReg(bool reg);
+		void						setFullName(std::string fullname);
 
 	private:
-		int			_fd;
-		bool		_auth;
-		std::string	_nick;
-		std::string	_user;
-		std::string	_identity;
-		std::string	_host;
-		bool		_reg;
-		std::string	_fullName;
-		bool		_srvOperator;
+		int							_fd;
+		bool						_auth;
+		std::string					_nick;
+		std::string					_user;
+		std::string					_identity;
+		std::string					_host;
+		bool						_reg;
+		std::string					_fullName;
+		bool						_srvOperator;
+		std::map<std::string, bool>	_modes;
 };
 
 std::ostream	&operator<<(std::ostream const &o, Client &c);

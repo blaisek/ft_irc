@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/30 15:37:47 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 13:21:44 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,13 +90,13 @@ std::string	Server::_cmd_user(Request& req, int fd)
 {
 	// 1
 	if (!this->_clients[fd]->isAuth())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, "You need to authenticate first.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, ":You need to authenticate first.\r\n"));
 	// 2
 	if (this->_clients[fd]->getReg())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_ALREADYREGISTRED, "Already registered.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_ALREADYREGISTRED, ":Already registered.\r\n"));
 	// 3
 	if (req.params.size() < 3)
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameters given.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
 	// 4
 	this->_clients[fd]->setUser(req.params[0]);
 	this->_clients[fd]->setHost(req.params[2]);
@@ -105,7 +105,7 @@ std::string	Server::_cmd_user(Request& req, int fd)
 	{
 		this->_clients[fd]->setIdentity(this->_clients[fd]->getNick() + "!" + this->_clients[fd]->getUser() + "@" + this->_clients[fd]->getHost());
 		this->_clients[fd]->setReg(true);
-		return (this->_get_message(this->_clients[fd]->getNick(), RPL_WELCOME, "You're now registered! " + this->_clients[fd]->getIdentity() + "\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), RPL_WELCOME, ":You're now registered! " + this->_clients[fd]->getIdentity() + "\r\n"));
 	}
 	return ("");
 }
@@ -115,7 +115,7 @@ std::string	Server::_cmd_user(Request& req, int fd)
 std::string	Server::_cmd_ping(Request& req, int fd)
 {
 	if (req.params.size() < 1)
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameteres givent.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameteres givent.\r\n"));
 	return ("PONG " + req.params[0] + "\r\n");
 }
 
@@ -127,28 +127,49 @@ std::string	Server::_cmd_ping(Request& req, int fd)
 //     3.3 => if 1st param is a nick but not current user's nick and current user is srv operator => display nick's modes
 //     3.4 => if 1st param is a channel name => display channel's modes
 //     3.5 => else => error not a nick/channel
-// 4. 
+// 4. two params
+//     4.1 => if first param is a nickname
+//          4.1.1 => check if nick is current nick
+//               4.1.1.1 => if second param starts with +
+//               4.1.1.2 => if second param starts with -
+//     4.2 => if first param is a channel name
 std::string	Server::_cmd_mode(Request& req, int fd)
 {
 	// 1
 	if (!this->_clients[fd]->getReg())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOTREGISTERED, "You must be registered to do this.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOTREGISTERED, ":You must be registered to do this.\r\n"));
 	// 2
 	if (req.params.size() == 0)
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, "Not enough parameters given.\r\n"));
+		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
 	// 3
 	if (req.params.size() == 1)
 	{
 		// 3.1
 		if (req.params[0] == this->_clients[fd]->getNick())
 			return (this->_clients[fd]->getModes());
-		// 3.2
+		// 3.2 & 3.3
 		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
 		{
 			if (this->_clients[fd]->isOp())
 				return (this->_clients[this->_fdByNick(req.params[0])]->getModes());
 			else
-				return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, "You do not have rights to see other users' mode.\r\n"));
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, ":You do not have rights to see other users' mode.\r\n"));
+		}
+		// 3.4 
+		if (this->_channels.find(req.params[0]) != this->_channels.end())
+			return (this->_channels[req.params[0]]->getModes());
+		else // 3.5
+			return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel\r\n"));
+	}
+	if (req.params.size() == 2)
+	{
+		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
+		{
+			// nick exists
+		}
+		if (this->_channels.find(req.params[0]) != this->_channels.end())
+		{
+			// channel exists
 		}
 	}
 	return ("");
