@@ -98,11 +98,6 @@ void Channel::removeMode(std::string mode)
         _mode.erase(pos, 1);
 }
 
-std::string Channel::getMode(void) const
-{
-    return (this->_mode);
-}
-
 std::string	Channel::getModes(void) const
 {
 	std::string ret;
