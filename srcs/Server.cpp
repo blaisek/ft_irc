@@ -221,15 +221,47 @@ void Server::sendMessageToChannelUsers(const std::string& channel_name, const st
         Client *client = *it;
         int client_fd = client->getFd();
         std::string client_nick = client->getNick();
-        //std::cout << "client_fd: " << client_fd << " client_nick: "<< client_nick << std::endl;
         if (client_fd != fd){
-            std::cout << "sending " << message << " to client: " << client_nick << std::endl;
             send_ret = send(client_fd, message.c_str(), message.length(), 0);
             if (send_ret < 0)
                 std::cerr << "send() error: " << strerror(errno) << std::endl;
         }
     }
 }
+
+void Server::sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd)
+{
+    int send_ret;
+    Client* targetClient = NULL;
+
+    // looking for the client by nickname
+    std::map<int, Client*>::iterator it;
+    for (it = this->_clients.begin(); it != this->_clients.end(); ++it)
+    {
+        Client* client = it->second;
+        if (client->getNick() == userNickname)
+        {
+            targetClient = client;
+            break;
+        }
+    }
+
+    if (targetClient != NULL)
+    {
+        int target_fd = targetClient->getFd();
+        if (target_fd != fd)
+        {
+            send_ret = send(target_fd, message.c_str(), message.length(), 0);
+            if (send_ret < 0)
+                std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "User not found: " << userNickname << std::endl;
+    }
+}
+
 
 std::string Server::getChannelNames(void) const
 {

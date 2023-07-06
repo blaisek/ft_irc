@@ -17,19 +17,27 @@ std::string Server::_cmd_privmsg(Request& req, int fd)
 {
     std::string trailing = req.trailing;
     std::string channel_name = req.params[0];
+    std::string target_nickName = req.params[1];
     std::string nick = this->_clients[fd]->getNick();
 
-    std::string message =  ("PRIVMSG " + channel_name +  " :" + nick + " : "+ trailing + "\n");
-    /*std::string channels = getChannelNames();
-
-    std::cout << "channel_name: " << channel_name << std::endl;
-    std::cout << "channels: " << channels << std::endl;*/
+    std::string message = ":" + nick + " PRIVMSG " + channel_name + " " + trailing + "\n";
 
     if (this->_channels.find(channel_name) != this->_channels.end())
-        sendMessageToChannelUsers(channel_name, message, fd);
+    {
+        if (target_nickName.empty())
+            sendMessageToChannelUsers(channel_name, message, fd);
+    }
+    else if (std::find (this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
+    {
+        sendPrivateMessage(req.params[0], message, fd);
+    }
     else
-        return "error: channel not found" + channel_name + "\n";
+    {
+        return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel/r/n"));
+//        return "error: channel not found " + channel_name + "\n";
+    }
 
     return "";
 }
+
 
