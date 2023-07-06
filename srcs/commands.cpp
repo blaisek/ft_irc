@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 15:08:52 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 15:54:32 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -161,7 +161,8 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 	}
 	else
 	{
-		bool	validMode = true;
+		bool		validMode = true;
+		std::string	chdModes;
 		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
 		{
 			// nick exists
@@ -169,15 +170,19 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 			if (req.params[1][0] != '-' && req.params[1][0] != '+')
 				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
 			std::vector<char>	modes = this->_splitModes(req.params[1]);
+			chdModes.append(std::string(1, req.params[1][0]));
 			char m = this->_validUserMode(modes, validMode);
 			if (!validMode)
 				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, m) + " :is unknown mode char to me.\r\n"));
 			for (unsigned int i = 0; i < modes.size(); i++)
 			{
 				bool setMode = req.params[1][0] == '+' ? true : false;
+				if (setMode && modes[i] == 'o')
+					continue ;
+				chdModes.append(std::string(1, modes[i]));
 				this->_clients[fd]->setMode(modes[i], setMode);
 			}
-			return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + this->_clients[fd]->getModes());
+			return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + chdModes + "\r\n");
 		}
 		else if (this->_channels.find(req.params[0]) != this->_channels.end())
 		{
