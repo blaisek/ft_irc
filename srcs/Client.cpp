@@ -6,16 +6,28 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/25 00:16:03 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 15:55:47 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") {}
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false)
+{
+	this->_modes.insert(std::make_pair('i', false));
+	this->_modes.insert(std::make_pair('s', false));
+	this->_modes.insert(std::make_pair('w', false));
+	this->_modes.insert(std::make_pair('o', false));
+}
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") {}
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false)
+{
+	this->_modes.insert(std::make_pair('i', false));
+	this->_modes.insert(std::make_pair('s', false));
+	this->_modes.insert(std::make_pair('w', false));
+	this->_modes.insert(std::make_pair('o', false));
+}
 
 // Copy constructor
 Client::Client(const Client &other)
@@ -45,6 +57,22 @@ std::string	Client::getIdentity(void) const { return (this->_identity); }
 std::string	Client::getHost(void) const { return (this->_host); }
 bool		Client::getReg(void) const { return (this->_reg); }
 std::string	Client::getFullName(void) const { return (this->_fullName); }
+bool		Client::isOp(void) const { return (this->_srvOperator); }
+
+std::string	Client::getModes(void) const
+{
+	std::string	modes;
+
+	for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+	{
+		if (it->second)
+			modes.append(std::string(1, it->first));
+	}
+	if (modes.length() > 0)
+		modes.insert(modes.begin(), '+');
+	modes.append("\r\n");
+	return (modes);
+}
 
 void		Client::setNick(std::string nick) { this->_nick = nick; }
 void		Client::setUser(std::string user) { this->_user = user; }
@@ -53,6 +81,8 @@ void		Client::setHost(std::string host) { this->_host = host; }
 void		Client::setReg(bool reg) { this->_reg = reg; }
 void		Client::setAuth(bool auth) { this->_auth = auth; }
 void		Client::setFullName(std::string fullname) { this->_fullName = fullname; }
+
+void		Client::setMode(char mode, bool setMode) { this->_modes[mode] = setMode; }
 
 std::ostream &operator<<(std::ostream &o, const Client &c)
 {

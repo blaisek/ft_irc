@@ -186,10 +186,12 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_user(req, fd));
 	else if (req.cmd == "PING")
 		return (this->_cmd_ping(req, fd));
-    else if (req.cmd == "JOIN")
-        return (this->_cmd_join(req, fd));
-    else if (req.cmd == "PRIVMSG")
-        return (this->_cmd_privmsg(req, fd));
+  else if (req.cmd == "JOIN")
+    return (this->_cmd_join(req, fd));
+  else if (req.cmd == "PRIVMSG")
+    return (this->_cmd_privmsg(req, fd));
+	else if (req.cmd == "MODE")
+		return (this->_cmd_mode(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
@@ -273,4 +275,39 @@ std::string Server::getChannelNames(void) const
         channel_names += " ";
     }
     return channel_names;
+}
+
+int	Server::_fdByNick(std::string nick)
+{
+	// std::map<int, Client*>::iterator	it = this->_clients.begin();
+
+	for (std::map<int, Client*>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if (it->second->getNick() == nick)
+			return (it->first);
+	}
+	// not found
+	return (-1);
+}
+
+std::vector<char>	Server::_splitModes(std::string modes)
+{
+	std::vector<char>	ret;
+	for (unsigned int i = 1; i < modes.length(); i++)
+		ret.push_back(modes[i]);
+	return (ret);
+}
+
+// i s w o
+char	Server::_validUserMode(std::vector<char> modes, bool &validMode)
+{
+	for (unsigned int i = 0; i < modes.size(); i++)
+	{
+		if (modes[i] != 'i' && modes[i] != 's' && modes[i] != 'w' && modes[i] != 'o')
+		{
+			validMode = false;
+			return (modes[i]);
+		}
+	}
+	return (0);
 }
