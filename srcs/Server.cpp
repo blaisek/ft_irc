@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 13:55:38 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 16:32:08 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,8 +158,11 @@ void	Server::_handle_request(int i)
 				continue ;
 			std::string ret = this->_reply(reqs[j], fd);
 			std::cout << "Reply: " << ret << std::endl;
-			if (send(fd, ret.c_str(), ret.length(), 0) < 0)
-				std::cerr << "send() error: " << strerror(errno) << std::endl;
+			if (reqs[j].cmd != "QUIT")
+			{
+				if (send(fd, ret.c_str(), ret.length(), 0) < 0)
+					std::cerr << "send() error: " << strerror(errno) << std::endl;
+			}
 		}
 	}
 	// reset buffer so its empty the next time around
@@ -188,6 +191,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_ping(req, fd));
 	else if (req.cmd == "MODE")
 		return (this->_cmd_mode(req, fd));
+	else if (req.cmd == "QUIT")
+		return (this->_cmd_quit(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
