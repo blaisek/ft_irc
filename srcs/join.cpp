@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/02 07:35:05 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/06 19:15:08 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ std::string Server::_cmd_join(Request& req, int fd)
 
         // Add customer to existing channel
         channel->addClient(this->_clients[fd]);
+		this->_clients[fd]->join(channel_name);
 
         // Send a notification message to other channel users
         std::string message = ":" + nick + " JOIN " + channel_name + "\n";
@@ -61,6 +62,7 @@ std::string Server::_cmd_join(Request& req, int fd)
 
         // Add customer to channel
         channel->addClient(this->_clients[fd]);
+		this->_clients[fd]->join(channel_name);
 
         // Send a notification message to other channel users
         std::string message = ":" + nick + " JOIN " + channel_name + "\n";

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/06/30 16:17:43 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 19:37:46 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ Channel::Channel(void)
     return ;
 }
 
-Channel::Channel(std::string name) : _name(name)
+Channel::Channel(std::string name) : _name(name), _password("")
 {
     // initialiser d'autres attributs du canal, configurer des paramètres, etc.
     return ;
@@ -192,7 +192,7 @@ void Channel::setTopic(std::string topic)
 
 bool Channel::hasPassword(void) const
 {
-    if (this->_password.empty() == true)
+    if (this->_password == "")
         return (false);
     return (true);
 }

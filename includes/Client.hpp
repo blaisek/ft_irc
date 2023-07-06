@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 14:54:15 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 19:34:03 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ class Client
 		std::string					getFullName(void) const;
 		std::string					getModes(void) const;
 		bool						isOp(void) const;
+		std::vector<std::string>	getChans(void);
 
 		void						setAuth(bool auth);
 		void						setNick(std::string nick);
@@ -42,6 +43,8 @@ class Client
 		void						setReg(bool reg);
 		void						setFullName(std::string fullname);
 		void						setMode(char mode, bool setMode);
+		void						join(std::string channelName);
+		void						leave(std::string channelName);
 
 	private:
 		int							_fd;
@@ -54,6 +57,7 @@ class Client
 		std::string					_fullName;
 		bool						_srvOperator;
 		std::map<char, bool>		_modes;
+		std::vector<std::string>	_channels;
 };
 
 std::ostream	&operator<<(std::ostream const &o, Client &c);

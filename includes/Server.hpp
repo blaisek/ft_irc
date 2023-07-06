@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 16:31:35 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 19:17:50 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,8 @@ class Server
         std::string     getChannelNames(void) const;
 
 		void			start(void);
-        void            sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
-        void            sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
+		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
+		void			sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
 
 	private:
 		std::string							_name;
@@ -54,7 +54,6 @@ class Server
 		void					_handle_request(int i);
 		std::string				_get_message(std::string nick, std::string code, std::string message);
 		std::string				_reply(Request req, int fd);
-		void					_createChannel(std::string name);
 		int						_fdByNick(std::string nick);
 		std::vector<char>		_splitModes(std::string modes);
 		char					_validUserMode(std::vector<char> modes, bool &validMode);
@@ -64,8 +63,8 @@ class Server
 		std::string				_cmd_pass(Request& req, int fd);
 		std::string				_cmd_user(Request& req, int fd);
 		std::string				_cmd_ping(Request& req, int fd);
-    std::string       _cmd_join(Request& req, int fd);
-    std::string       _cmd_privmsg(Request& req, int fd);
+		std::string				_cmd_join(Request& req, int fd);
+		std::string				_cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
 };

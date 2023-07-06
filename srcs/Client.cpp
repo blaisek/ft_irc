@@ -6,14 +6,14 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 15:55:47 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 19:33:55 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false)
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false), _channels()
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
@@ -21,7 +21,7 @@ Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""),
 	this->_modes.insert(std::make_pair('o', false));
 }
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false)
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false), _channels()
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
@@ -57,6 +57,7 @@ std::string	Client::getIdentity(void) const { return (this->_identity); }
 std::string	Client::getHost(void) const { return (this->_host); }
 bool		Client::getReg(void) const { return (this->_reg); }
 std::string	Client::getFullName(void) const { return (this->_fullName); }
+std::vector<std::string>	Client::getChans(void) { return (this->_channels); }
 bool		Client::isOp(void) const { return (this->_srvOperator); }
 
 std::string	Client::getModes(void) const
@@ -83,6 +84,16 @@ void		Client::setAuth(bool auth) { this->_auth = auth; }
 void		Client::setFullName(std::string fullname) { this->_fullName = fullname; }
 
 void		Client::setMode(char mode, bool setMode) { this->_modes[mode] = setMode; }
+
+void		Client::join(std::string channelName)
+{
+	this->_channels.push_back(channelName);
+}
+
+void		Client::leave(std::string channelName)
+{
+	this->_channels.erase(std::remove(this->_channels.begin(), this->_channels.end(), channelName), this->_channels.end());
+}
 
 std::ostream &operator<<(std::ostream &o, const Client &c)
 {
