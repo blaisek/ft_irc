@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/26 22:33:36 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 13:55:38 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -232,4 +232,26 @@ int	Server::_fdByNick(std::string nick)
 	}
 	// not found
 	return (-1);
+}
+
+std::vector<char>	Server::_splitModes(std::string modes)
+{
+	std::vector<char>	ret;
+	for (unsigned int i = 1; i < modes.length(); i++)
+		ret.push_back(modes[i]);
+	return (ret);
+}
+
+// i s w o
+char	Server::_validUserMode(std::vector<char> modes, bool &validMode)
+{
+	for (unsigned int i = 0; i < modes.size(); i++)
+	{
+		if (modes[i] != 'i' && modes[i] != 's' && modes[i] != 'w' && modes[i] != 'o')
+		{
+			validMode = false;
+			return (modes[i]);
+		}
+	}
+	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/05 22:19:44 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 14:54:15 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ class Client
 		void						setHost(std::string host);
 		void						setReg(bool reg);
 		void						setFullName(std::string fullname);
+		void						setMode(char mode, bool setMode);
 
 	private:
 		int							_fd;
@@ -52,7 +53,7 @@ class Client
 		bool						_reg;
 		std::string					_fullName;
 		bool						_srvOperator;
-		std::map<std::string, bool>	_modes;
+		std::map<char, bool>		_modes;
 };
 
 std::ostream	&operator<<(std::ostream const &o, Client &c);

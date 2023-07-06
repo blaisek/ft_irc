@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/26 22:32:28 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 13:52:25 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,8 @@ class Server
 		std::string				_reply(Request req, int fd);
 		void					_createChannel(std::string name);
 		int						_fdByNick(std::string nick);
+		std::vector<char>		_splitModes(std::string modes);
+		char					_validUserMode(std::vector<char> modes, bool &validMode);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);

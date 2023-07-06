@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 13:21:44 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/06 15:08:52 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ std::string	Server::_cmd_nick(Request& req, int fd)
 	while (nick[i])
 	{
 		int c = nick[i];
-		if (!isalnum(c) && c != '-' && c != '[' && c != ']' && c != '{' && c != '}' && c != '\\' && c != '`' && c != '^')
+		if (!isalnum(c) && c != '-' && c != '[' && c != ']' && c != '{' && c != '}' && c != '\\' && c != '`' && c != '^' && c != '_')
 			return (this->_get_message(this->_clients[fd]->getNick(), ERR_ERRONEUSNICKNAME, nick + " :Erroneous nickname\r\n"));
 		i++;
 	}
@@ -146,7 +146,7 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 	{
 		// 3.1
 		if (req.params[0] == this->_clients[fd]->getNick())
-			return (this->_clients[fd]->getModes());
+			return (this->_get_message(this->_clients[fd]->getNick(), RPL_UMODEIS, this->_clients[fd]->getModes()));
 		// 3.2 & 3.3
 		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
 		{
@@ -158,19 +158,33 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 		// 3.4 
 		if (this->_channels.find(req.params[0]) != this->_channels.end())
 			return (this->_channels[req.params[0]]->getModes());
-		else // 3.5
-			return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel\r\n"));
 	}
-	if (req.params.size() == 2)
+	else
 	{
+		bool	validMode = true;
 		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
 		{
 			// nick exists
+			// check if first char is + or - else return => ERR_UNKNOWNMODE
+			if (req.params[1][0] != '-' && req.params[1][0] != '+')
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
+			std::vector<char>	modes = this->_splitModes(req.params[1]);
+			char m = this->_validUserMode(modes, validMode);
+			if (!validMode)
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, m) + " :is unknown mode char to me.\r\n"));
+			for (unsigned int i = 0; i < modes.size(); i++)
+			{
+				bool setMode = req.params[1][0] == '+' ? true : false;
+				this->_clients[fd]->setMode(modes[i], setMode);
+			}
+			return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + this->_clients[fd]->getModes());
 		}
-		if (this->_channels.find(req.params[0]) != this->_channels.end())
+		else if (this->_channels.find(req.params[0]) != this->_channels.end())
 		{
+			return ("Channel exists\r\n");
 			// channel exists
 		}
 	}
+	return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel\r\n"));
 	return ("");
 }
