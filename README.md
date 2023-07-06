@@ -21,6 +21,22 @@ This project is about creating **_our own IRC server_**. We used an actual IRC c
 
 # 💻 Our IRC Commands
 These are the available commands in our IRC Server:
+
+  - **NICK**:      /nick nickname, Changes your nickname to a new nickname.
+  - **PASS**:      /pass command is used to set a 'connection password'.
+  - **USER**:      /user command is used at the beginning of connection to specify the username, hostname and realname of a new user.
+  - **PING**:      /ping user,  Sends a PING request to a user. Used for checking connection and lag. Servers issue pings on a timed basis to determine if users are still connected.
+  - **JOIN**:      /join #channel [key] , Joins the specified channel with or without password.
+  - **MSG**:       /msg nickname message, Sends a private message to nickname without opening a query window.
+  - **MODE**:      /mode #channel|nickname [[+|-]modechars [parameters]], This is a powerful command that gives channel operators control of a channel and the users on it.
+  - **QUIT**:      /quit [message], Disconnects you from IRC and will give the optional message as the reason for your departure. (this message only appears to people who are on the same channels as you).
+  - **PART**:      /part command is used when you want to depart/leave a specific channel, or the current active channel. This command also allows you to specify a parting message, which will display to the remaining users a custom message in the server's PART message. 
+  - **TOPIC**:     /topic #channel newtopic, Changes the topic for a channel that you are on if you're an operator.
+  - **KICK**:      /kick #channel nickname, Kicks a nickname off a channel that you are on if you're an operator.
+  - **INVITE**:    /invite nickname #channel, Invites a nickname to a channel that you are on.
+  - **NOTICE**:    /notice nickname message, Sends a private message to nickname without opening a query window for either you or them.
+  - **LIST**:      /list command enables you to find list of channels on the server.
+  - **WHOIS**:     /whois nickname, Shows you information about a nickname.
  
 
 # ⚙️ Start IRC Server
