@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/06 19:37:46 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 16:01:45 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,4 +195,27 @@ bool Channel::hasPassword(void) const
     if (this->_password == "")
         return (false);
     return (true);
+}
+
+void	Channel::removeUser(std::string nick)
+{
+	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
+	
+	for (unsigned int i = 0; i < this->_clients.size(); i++)
+	{
+		if (this->_clients[i]->getNick() == nick)
+		{
+			this->_clients.erase(this->_clients.begin() + i);
+			break ;
+		}
+	}
+
+	for (unsigned int i = 0; i < this->_operators.size(); i++)
+	{
+		if (this->_operators[i]->getNick() == nick)
+		{
+			this->_operators.erase(this->_operators.begin() + i);
+			break ;
+		}
+	}
 }

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 19:50:57 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 16:06:56 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,18 +239,18 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 	// form quit message
 	std::string	quitmes;
 
-	quitmes.append(":" + this->_clients[fd]->getNick());
+	std::string nick = this->_clients[fd]->getNick();
+
+	quitmes.append(":" + nick);
 	quitmes.append(" QUIT " + req.trailing + "\r\n");
 
 	std::vector<std::string> chans = this->_clients[fd]->getChans();
 	for (unsigned int i = 0; i < chans.size(); i++)
 	{
+		this->_channels[chans[i]]->removeUser(nick);
 		this->sendMessageToChannelUsers(chans[i], quitmes, fd);
+		this->_clients[fd]->leave(chans[i]);
 	}
-	// send quit message to all users on all channels this user has joined
-	// make user leave all channels he's joined
-	// remove nick from server's nicknames list
-	// remove client from poll
 
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
 	this->_remove_client(i);

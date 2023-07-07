@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/06 19:26:11 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 15:45:28 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ class Channel
         std::vector<int> getBanned(void) const;
         void addInvite(int fd);
         std::vector<int> getInvite(void) const;
+		void	removeUser(std::string nick);
 
     private:
         Channel(void);
