@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/07 16:01:45 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 17:14:12 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,4 +218,5 @@ void	Channel::removeUser(std::string nick)
 			break ;
 		}
 	}
+	this->removeNickname(nick);
 }

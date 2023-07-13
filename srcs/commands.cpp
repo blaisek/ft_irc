@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/07 16:06:56 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/13 11:53:40 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,11 +248,10 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 	for (unsigned int i = 0; i < chans.size(); i++)
 	{
 		this->_channels[chans[i]]->removeUser(nick);
-		this->sendMessageToChannelUsers(chans[i], quitmes, fd);
-		this->_clients[fd]->leave(chans[i]);
 	}
 
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
+	close(fd);
 	this->_remove_client(i);
 	return ("");
 }
