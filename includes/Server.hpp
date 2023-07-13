@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 19:17:50 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 17:15:33 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ class Server
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
 		void			sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
+		void			removeChannel(std::string chanName);
 
 	private:
 		std::string							_name;
@@ -57,6 +58,8 @@ class Server
 		int						_fdByNick(std::string nick);
 		std::vector<char>		_splitModes(std::string modes);
 		char					_validUserMode(std::vector<char> modes, bool &validMode);
+		void					_sendNoticeToChannel(const std::string& target, const std::string& mes, int fd);
+		void					_sendNoticeToUser(const std::string& target, const std::string& mes, int fd);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);
@@ -67,6 +70,7 @@ class Server
 		std::string				_cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
+		std::string				_cmd_notice(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

@@ -6,14 +6,14 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 19:33:55 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/07 17:39:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false), _channels()
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false)
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
@@ -21,7 +21,7 @@ Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""),
 	this->_modes.insert(std::make_pair('o', false));
 }
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false), _channels()
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false)
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
