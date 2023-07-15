@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/13 14:08:24 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/15 15:08:13 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ std::string Server::_cmd_join(Request& req, int fd)
         if (!key.empty())
         {
             channel->setPassword(key);
+			channel->setMode('k', true);
         }
 
         channel->addOperator(this->_clients[fd]);

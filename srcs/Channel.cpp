@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/07 17:14:12 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/15 15:07:15 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,16 @@ Channel::Channel(void)
 
 Channel::Channel(std::string name) : _name(name), _password("")
 {
+	// |o|p|s|i|t|n|b|v
+	this->_modes.insert(std::make_pair('o', false));
+	this->_modes.insert(std::make_pair('p', false));
+	this->_modes.insert(std::make_pair('s', false));
+	this->_modes.insert(std::make_pair('i', false));
+	this->_modes.insert(std::make_pair('t', false));
+	this->_modes.insert(std::make_pair('n', false));
+	this->_modes.insert(std::make_pair('b', false));
+	this->_modes.insert(std::make_pair('v', false));
+	this->_modes.insert(std::make_pair('k', false));
     // initialiser d'autres attributs du canal, configurer des paramètres, etc.
     return ;
 }
@@ -96,14 +106,6 @@ void Channel::removeMode(std::string mode)
     pos = _mode.find(mode);
     if (pos != std::string::npos)
         _mode.erase(pos, 1);
-}
-
-std::string	Channel::getModes(void) const
-{
-	std::string ret;
-	ret = "Channel modes";
-	ret.append("\r\n");
-	return (ret);
 }
 
 void Channel::addOperator(Client *client)
@@ -219,4 +221,21 @@ void	Channel::removeUser(std::string nick)
 		}
 	}
 	this->removeNickname(nick);
+}
+
+void	Channel::setMode(char mode, bool setMode) { this->_modes[mode] = setMode; }
+
+std::string	Channel::getModes(void) const
+{
+	std::string	modes;
+
+	for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+	{
+		if (it->second)
+			modes.append(std::string(1, it->first));
+	}
+	if (modes.length() > 0)
+		modes.insert(modes.begin(), '+');
+	modes.append("\r\n");
+	return (modes);
 }
