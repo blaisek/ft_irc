@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/13 11:53:27 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/13 14:08:24 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,6 +33,7 @@ std::string Server::_cmd_join(Request& req, int fd)
 
         // Add customer to existing channel
         channel->addClient(this->_clients[fd]);
+		this->_clients[fd]->join(channel_name);
 
         // Send a notification message to other channel users
         std::string message = ":" + nick + " JOIN " + channel_name + "\n";

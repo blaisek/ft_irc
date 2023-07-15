@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/13 11:53:40 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/15 13:11:08 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -229,29 +229,22 @@ std::string	Server::_cmd_mode(Request& req, int fd)
 
 std::string	Server::_cmd_quit(Request& req, int fd)
 {
-	// segfault => probably caused in the sendMessageToChannelUsers because
-	// channel tries to contact a user that has already left...
-	// make client leave all channels before sending the message
-	unsigned int i = 0;
-	while (this->_poll_fds[i].fd != fd)
-		i++;
-
-	// form quit message
 	std::string	quitmes;
-
 	std::string nick = this->_clients[fd]->getNick();
 
 	quitmes.append(":" + nick);
 	quitmes.append(" QUIT " + req.trailing + "\r\n");
 
 	std::vector<std::string> chans = this->_clients[fd]->getChans();
-	for (unsigned int i = 0; i < chans.size(); i++)
+	for (unsigned int j = 0; j < chans.size(); j++)
 	{
-		this->_channels[chans[i]]->removeUser(nick);
+		this->_channels[chans[j]]->removeClient(this->_clients[fd]);
+		this->sendMessageToChannelUsers(chans[j], quitmes, fd);
+		this->_clients[fd]->leave(chans[j]);
 	}
 
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
 	close(fd);
-	this->_remove_client(i);
+	this->_remove_client(fd);
 	return ("");
 }
