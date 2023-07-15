@@ -16,7 +16,7 @@ std::string Server::_cmd_part(Request& req, int fd)
 {
     std::string channel = req.params[0];
     std::string nick = this->_clients[fd]->getNick();
-    std::string message = ":" + nick + " PART " + channel + "\n";
+    std::string message = ":" + nick + " PART " + channel + "\r\n";
 
     if (this->_channels.find(channel) != this->_channels.end())
     {
@@ -32,5 +32,5 @@ std::string Server::_cmd_part(Request& req, int fd)
     }
     else
         return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHCHANNEL, ":No such channel/r/n"));
-    return ("PART" + channel + "\n");
+    return ("PART " + channel + "\r\n");
 }
