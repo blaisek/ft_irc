@@ -16,6 +16,7 @@ SRC =	main.cpp \
 		Channel.cpp \
 		join.cpp \
 		privmsg.cpp\
+		part.cpp\
 
 OBJ := $(SRC:%.cpp=%.o)
 

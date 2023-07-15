@@ -166,24 +166,19 @@ bool Channel::hasNickname(std::string nickname)
     return (false);
 }
 
-void Channel::addNickname(std::string nickname)
+
+std::vector<std::string> Channel::getNicknamesList(void) const
 {
-    this->_nicknames.push_back(nickname);
+    std::vector<std::string> nicknames;
+    std::vector<Client *>::const_iterator it;
+
+    for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+    {
+        nicknames.push_back((*it)->getNick());
+    }
+    return (nicknames);
 }
 
-std::vector<std::string> Channel::getNicknames(void) const
-{
-    return (this->_nicknames);
-}
-
-void Channel::removeNickname(std::string nickname)
-{
-    std::vector<std::string>::iterator it;
-
-    it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
-    if (it != this->_nicknames.end())
-        this->_nicknames.erase(it);
-}
 
 void Channel::setTopic(std::string topic)
 {
@@ -197,25 +192,18 @@ bool Channel::hasPassword(void) const
     return (true);
 }
 
-void	Channel::removeUser(std::string nick)
-{
-	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
-	
-	for (unsigned int i = 0; i < this->_clients.size(); i++)
-	{
-		if (this->_clients[i]->getNick() == nick)
-		{
-			this->_clients.erase(this->_clients.begin() + i);
-			break ;
-		}
-	}
+bool Channel::find(int fd) {
+    std::vector<Client *>::iterator it;
 
-	for (unsigned int i = 0; i < this->_operators.size(); i++)
-	{
-		if (this->_operators[i]->getNick() == nick)
-		{
-			this->_operators.erase(this->_operators.begin() + i);
-			break ;
-		}
-	}
+    for (it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        if ((*it)->getFd() == fd)
+            return (true);
+    }
+    return (false);
+}
+
+bool Channel::empty() const {
+    if (this->_clients.empty())
+        return (true);
+    return (false);
 }

@@ -67,6 +67,7 @@ class Server
 		std::string				_cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
+        std::string             _cmd_part(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

@@ -197,6 +197,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_mode(req, fd));
 	else if (req.cmd == "QUIT")
 		return (this->_cmd_quit(req, fd));
+    else if (req.cmd == "PART")
+        return (this->_cmd_part(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
