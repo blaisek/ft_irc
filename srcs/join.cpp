@@ -39,7 +39,7 @@ std::string Server::_cmd_join(Request& req, int fd)
         std::string message = ":" + nick + " JOIN " + channel_name + "\n";
         sendMessageToChannelUsers(channel_name, message, fd);
 
-        return ("");
+        return ("JOIN " + channel_name + "\n");
     }
     else
     {
@@ -68,7 +68,7 @@ std::string Server::_cmd_join(Request& req, int fd)
         std::string message = ":" + nick + " JOIN " + channel_name + "\n";
         sendMessageToChannelUsers(channel_name, message, fd);
 
-        return ("");
+        return ("JOIN " + channel_name + "\n");
     }
 }
 

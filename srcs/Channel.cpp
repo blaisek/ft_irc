@@ -154,9 +154,9 @@ void Channel::removeBanned(int fd)
         this->_banned.erase(it);
 }
 
-bool Channel::hasNickname(std::string nickname)
+bool Channel::hasNickname(std::string nickname) const
 {
-    std::vector<Client *>::iterator it;
+    std::vector<Client *>::const_iterator it;
 
     for (it = this->_clients.begin(); it != this->_clients.end(); it++)
     {
@@ -206,4 +206,17 @@ bool Channel::empty() const {
     if (this->_clients.empty())
         return (true);
     return (false);
+}
+
+void Channel::removeNickname(std::string nickname) {
+   if(!this->_nicknames.empty()) {
+       std::vector<std::string>::iterator it;
+       it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
+       if (it != this->_nicknames.end())
+           this->_nicknames.erase(it);
+   }
+}
+
+void Channel::addNickname(std::string nickname) {
+   this->_nicknames.push_back(nickname);
 }

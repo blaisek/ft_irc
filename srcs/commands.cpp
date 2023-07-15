@@ -247,7 +247,7 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 	std::vector<std::string> chans = this->_clients[fd]->getChans();
 	for (unsigned int i = 0; i < chans.size(); i++)
 	{
-		this->_channels[chans[i]]->removeUser(nick);
+		this->_channels[chans[i]]->removeClient(this->_clients[fd]);
 		this->sendMessageToChannelUsers(chans[i], quitmes, fd);
 		this->_clients[fd]->leave(chans[i]);
 	}

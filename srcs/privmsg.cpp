@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/04 04:09:21 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/06 18:26:01 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/15 22:00:40 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ std::string Server::_cmd_privmsg(Request& req, int fd)
 		sendPrivateMessage(target, message, fd);
 	else
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel/r/n"));
-	return ("");
+	return ("PRIVMSG"+ target +"\n");
 }
 
 
