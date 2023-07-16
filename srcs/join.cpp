@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/16 15:49:58 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 17:14:13 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,15 @@ std::string Server::_cmd_join(Request& req, int fd)
         // Check if the channel requires a key and if the provided key is correct
         if (channel->hasPassword() && channel->getPassword() != key)
         {
-            return (this->_get_message(nick, ERR_BADCHANNELKEY, "Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
+            return (this->_get_message(nick, ERR_BADCHANNELKEY, ":Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
         }
 
+		if (channel->getMode('i'))
+		{
+			// invite only channel
+			if (!channel->isInvited(this->_clients[fd]->getNick()))
+				return (this->_get_message(nick, ERR_INVITEONLYCHAN, ":" + channel_name + "\r\n"));
+		}
         // Add customer to existing channel
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);

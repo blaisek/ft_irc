@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/16 16:21:34 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 17:12:49 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,16 +120,6 @@ std::vector<int> Channel::getBanned(void) const
     return (this->_banned);
 }
 
-void Channel::addInvite(int fd)
-{
-    this->_invite.push_back(fd);
-}
-
-std::vector<int> Channel::getInvite(void) const
-{
-    return (this->_invite);
-}
-
 void Channel::removeBanned(int fd)
 {
     std::vector<int>::iterator it;
@@ -223,6 +213,38 @@ std::string	Channel::getModes(void) const
 	return (modes);
 }
 
+bool	Channel::getMode(char mode) const
+{
+	for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+	{
+		if (it->first == mode)
+			return (it->second);
+	}
+	return (false);
+}
+
 void	Channel::setLimit(int limit) { this->_limit = limit; }
 
 int	Channel::getLimit(void) const { return (this->_limit); }
+
+void	Channel::addInvited(std::string nick)
+{
+	this->_invited.push_back(nick);
+}
+
+void	Channel::removeInvited(std::string nick)
+{
+		this->_invited.erase(std::remove(this->_invited.begin(), this->_invited.end(), nick), this->_invited.end());
+}
+
+bool	Channel::isInvited(std::string nick) const
+{
+	if (std::find(this->_invited.begin(), this->_invited.end(), nick) != this->_invited.end())
+		return (true);
+	return (false);
+}
+
+std::vector<std::string>	Channel::getInvited(void) const
+{
+	return (this->_invited);
+}
