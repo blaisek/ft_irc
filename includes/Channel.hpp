@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/15 14:55:28 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 16:20:35 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,8 +37,6 @@ class Channel
         void setPassword(std::string password);
         std::string getPassword(void) const;
         bool hasPassword(void) const;
-        void addMode(std::string mode);
-        void removeMode(std::string mode);
         void addClient(Client *client);
         std::vector<Client *> getClients(void) const;
         void addOperator(Client *client);
@@ -52,6 +50,8 @@ class Channel
 		void				removeUser(std::string nick);
 		void				setMode(char mode, bool setMode);
 		std::string			getModes(void) const;
+		void				setLimit(int limit);
+		int					getLimit(void) const;
 
     private:
         Channel(void);
@@ -61,13 +61,13 @@ class Channel
         std::string _name;
         std::string _topic;
         std::string _password;
-        std::string _mode;
         std::vector<Client *> _clients;
         std::vector<Client *> _operators;
         std::vector<int> _banned;
         std::vector<int> _invite;
         std::vector<std::string> _nicknames;
 		std::map<char, bool>		_modes;
+		int							_limit;
 };
 
 

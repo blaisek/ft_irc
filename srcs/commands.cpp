@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/15 15:23:25 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 14:37:58 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,96 +150,6 @@ std::string	Server::_cmd_ping(Request& req, int fd)
 	if (req.params.size() < 1)
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameteres givent.\r\n"));
 	return ("PONG " + req.params[0] + "\r\n");
-}
-
-// 1. check if user is registered
-// 2. no param => ERR_NEEDMOREPARAMS
-// 3. one param => based on what irc.freenode.org does
-//     3.1 => if 1st param is current nick, return current user's mode
-//     3.2 => if 1st param is a nick but not current user's nick and current user is not srv operator => cannot view mode of other users
-//     3.3 => if 1st param is a nick but not current user's nick and current user is srv operator => display nick's modes
-//     3.4 => if 1st param is a channel name => display channel's modes
-//     3.5 => else => error not a nick/channel
-// 4. two params
-//     4.1 => if first param is a nickname
-//          4.1.1 => check if nick is current nick
-//               4.1.1.1 => if second param starts with +
-//               4.1.1.2 => if second param starts with -
-//     4.2 => if first param is a channel name
-std::string	Server::_cmd_mode(Request& req, int fd)
-{
-	// for (std::map<std::string, Channel*>::iterator it = this->_channels.begin(); it != this->_channels.end(); it++)
-	// 	std::cout << "Channel: " << it->first << std::endl;
-	// 1
-	if (!this->_clients[fd]->getReg())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOTREGISTERED, ":You must be registered to do this.\r\n"));
-	// 2
-	if (req.params.size() == 0)
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
-	// 3
-	if (req.params.size() == 1)
-	{
-		// 3.1
-		if (req.params[0] == this->_clients[fd]->getNick())
-			return (this->_get_message(this->_clients[fd]->getNick(), RPL_UMODEIS, this->_clients[fd]->getModes()));
-		// 3.2 & 3.3
-		else if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
-		{
-			if (this->_clients[fd]->isOp())
-				return (this->_clients[this->_fdByNick(req.params[0])]->getModes());
-			else
-				return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, ":You do not have rights to see other users' mode.\r\n"));
-		}
-		// 3.4 
-		else if (this->_channels.find(req.params[0]) != this->_channels.end())
-		{
-			// :*.freenode.net 324 saeby #freenode-bbs :+Pnrt
-			std::string ret = ":";
-			ret.append(this->_name);
-			ret.append(" ");
-			ret.append(RPL_CHANNELMODEIS);
-			ret.append(" ");
-			ret.append(this->_clients[fd]->getNick());
-			ret.append(" ");
-			ret.append(req.params[0]);
-			ret.append(" :");
-			ret.append(this->_channels[req.params[0]]->getModes());
-			return (ret);
-		}
-	}
-	else
-	{
-		std::cout << "Multiple params" << std::endl;
-		bool		validMode = true;
-		std::string	chdModes;
-		if (std::find(this->_nicknames.begin(), this->_nicknames.end(), req.params[0]) != this->_nicknames.end())
-		{
-			// nick exists
-			// check if first char is + or - else return => ERR_UNKNOWNMODE
-			if (req.params[1][0] != '-' && req.params[1][0] != '+')
-				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
-			std::vector<char>	modes = this->_splitModes(req.params[1]);
-			chdModes.append(std::string(1, req.params[1][0]));
-			char m = this->_validUserMode(modes, validMode);
-			if (!validMode)
-				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, m) + " :is unknown mode char to me.\r\n"));
-			for (unsigned int i = 0; i < modes.size(); i++)
-			{
-				bool setMode = req.params[1][0] == '+' ? true : false;
-				if (setMode && modes[i] == 'o')
-					continue ;
-				chdModes.append(std::string(1, modes[i]));
-				this->_clients[fd]->setMode(modes[i], setMode);
-			}
-			return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + chdModes + "\r\n");
-		}
-		else if (this->_channels.find(req.params[0]) != this->_channels.end())
-		{
-			return ("Channel exists\r\n");
-			// channel exists
-		}
-	}
-	return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel\r\n"));
 }
 
 std::string	Server::_cmd_quit(Request& req, int fd)

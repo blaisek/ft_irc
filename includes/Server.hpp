@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/15 15:16:26 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 15:12:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,7 @@ class Server
 		int						_fdByNick(std::string nick);
 		std::vector<char>		_splitModes(std::string modes);
 		char					_validUserMode(std::vector<char> modes, bool &validMode);
+		char					_validChannelMode(std::vector<char> modes, bool &validMode);
 		void					_sendNoticeToChannel(const std::string& target, const std::string& mes, int fd);
 		void					_sendNoticeToUser(const std::string& target, const std::string& mes, int fd);
 
@@ -71,6 +72,9 @@ class Server
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
 		std::string				_cmd_notice(Request& req, int fd);
+
+		std::string				_userMode(Request& req, int fd);
+		std::string				_channelMode(Request& req, int fd);
 };
 
 std::ostream &operator<<(std::ostream &o, const Server &s);

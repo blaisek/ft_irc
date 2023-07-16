@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 09:52:46 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 13:42:40 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 15:07:38 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
+# include <string>
 # include <sys/types.h>
 # include <sys/socket.h>
 # include <netinet/in.h>

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/15 15:07:15 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 16:21:34 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ Channel::Channel(void)
     return ;
 }
 
-Channel::Channel(std::string name) : _name(name), _password("")
+Channel::Channel(std::string name) : _name(name), _password(""), _limit(0)
 {
 	// |o|p|s|i|t|n|b|v
 	this->_modes.insert(std::make_pair('o', false));
@@ -89,23 +89,6 @@ void Channel::setPassword(std::string password)
 std::string Channel::getPassword(void) const
 {
     return (this->_password);
-}
-
-void Channel::addMode(std::string mode)
-{
-    if (_mode.empty() == true)
-        _mode = "+" + mode;
-    else
-        _mode += mode;
-}
-
-void Channel::removeMode(std::string mode)
-{
-    std::string::size_type pos;
-
-    pos = _mode.find(mode);
-    if (pos != std::string::npos)
-        _mode.erase(pos, 1);
 }
 
 void Channel::addOperator(Client *client)
@@ -239,3 +222,7 @@ std::string	Channel::getModes(void) const
 	modes.append("\r\n");
 	return (modes);
 }
+
+void	Channel::setLimit(int limit) { this->_limit = limit; }
+
+int	Channel::getLimit(void) const { return (this->_limit); }
