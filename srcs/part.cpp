@@ -16,7 +16,13 @@ std::string Server::_cmd_part(Request& req, int fd)
 {
     std::string channel = req.params[0];
     std::string nick = this->_clients[fd]->getNick();
-    std::string message = ":" + nick + " PART " + channel + "\r\n";
+    std::string leaving_message = req.trailing;
+    std::string message = ":" + nick + " PART " + channel;
+
+    if(leaving_message.empty())
+        message.append( "\r\n");
+    else
+        message.append(" " + leaving_message + "\r\n");
 
     if (this->_channels.find(channel) != this->_channels.end())
     {
