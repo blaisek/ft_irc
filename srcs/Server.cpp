@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 16:34:00 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 17:24:13 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_notice(req, fd));
 	else if (req.cmd == "MODE")
 		return (this->_cmd_mode(req, fd));
+	else if (req.cmd == "INVITE")
+		return (this->_cmd_invite(req, fd));
 	else if (req.cmd == "QUIT")
 		return (this->_cmd_quit(req, fd));
 	else

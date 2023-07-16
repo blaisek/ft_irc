@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/16 17:05:37 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 17:47:25 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ class Channel
 		void				removeInvited(std::string nick);
 		std::vector<std::string>	getInvited(void) const;
 		bool				isInvited(std::string nick) const;
+		bool				isOp(std::string nick) const;
 
     private:
         Channel(void);

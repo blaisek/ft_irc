@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/16 17:12:49 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 17:56:43 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -247,4 +247,14 @@ bool	Channel::isInvited(std::string nick) const
 std::vector<std::string>	Channel::getInvited(void) const
 {
 	return (this->_invited);
+}
+
+bool	Channel::isOp(std::string nick) const
+{
+	for (unsigned int i = 0; i < this->_operators.size(); i++)
+	{
+		if (this->_operators[i]->getNick() == nick)
+			return (true);
+	}
+	return (false);
 }
