@@ -17,6 +17,7 @@ SRC =	main.cpp \
 		join.cpp \
 		privmsg.cpp\
 		notice.cpp \
+		mode.cpp
 
 OBJ := $(SRC:%.cpp=%.o)
 

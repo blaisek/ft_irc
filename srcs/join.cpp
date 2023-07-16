@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/15 15:08:13 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/16 15:49:58 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,6 @@ std::string Server::_cmd_join(Request& req, int fd)
 
         Channel* channel = new Channel(channel_name);
         channel->addNickname(nick);
-
-        // Check if the channel requires a key
-        if (!key.empty())
-        {
-            channel->setPassword(key);
-			channel->setMode('k', true);
-        }
 
         channel->addOperator(this->_clients[fd]);
         channel->setTopic("No topic is set");
