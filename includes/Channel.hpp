@@ -48,7 +48,7 @@ class Channel
         bool hasNickname(std::string nickname) const;
         bool find(int fd);
         bool empty(void) const;
-        std::vector<std::string> getNicknamesList(void) const;
+        std::string getNicknamesList(void) const;
         void removeNickname(std::string nickname);
         void addNickname(std::string nickname);
 

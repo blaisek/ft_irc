@@ -28,9 +28,9 @@ std::string Server::_cmd_part(Request& req, int fd)
     {
         if (this->_channels[channel]->find(fd))
         {
-            this->_channels[channel]->removeClient(this->_clients[fd]);
+            /*this->_channels[channel]->removeClient(this->_clients[fd]);
             if (this->_channels[channel]->empty())
-                this->_channels.erase(channel);
+                this->_channels.erase(channel);*/
             sendMessageToChannelUsers(channel, message, fd);
         }
         else

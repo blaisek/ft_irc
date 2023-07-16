@@ -19,6 +19,8 @@ std::string Server::_cmd_join(Request& req, int fd)
     std::string key = req.params[1];
 
     std::string nick = this->_clients[fd]->getNick();
+    // ajouter user name et list of members
+    std::string user_name = this->_clients[fd]->getUser();
 
     // check if the channel already exists
     if (this->_channels.find(channel_name) != this->_channels.end())
@@ -34,12 +36,14 @@ std::string Server::_cmd_join(Request& req, int fd)
         // Add customer to existing channel
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);
-
+        std::string members = this->_channels[channel_name]->getNicknamesList();
+        std::string message = ":" + nick+  " JOIN " + channel_name  +"\r\n";
         // Send a notification message to other channel users
-        std::string message = ":" + nick + " JOIN " + channel_name + "\n";
         sendMessageToChannelUsers(channel_name, message, fd);
 
-        return ("JOIN " + channel_name + "\n");
+
+        return (message);
+
     }
     else
     {
@@ -63,12 +67,13 @@ std::string Server::_cmd_join(Request& req, int fd)
         // Add customer to channel
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);
-
+        std::string members = this->_channels[channel_name]->getNicknamesList();
+        std::string message = ":" + nick+  " JOIN " + channel_name + "\r\n";
         // Send a notification message to other channel users
-        std::string message = ":" + nick + " JOIN " + channel_name + "\n";
         sendMessageToChannelUsers(channel_name, message, fd);
 
-        return ("JOIN " + channel_name + "\n");
+
+        return (message);
     }
 }
 

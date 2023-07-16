@@ -167,14 +167,15 @@ bool Channel::hasNickname(std::string nickname) const
 }
 
 
-std::vector<std::string> Channel::getNicknamesList(void) const
+std::string Channel::getNicknamesList(void) const
 {
-    std::vector<std::string> nicknames;
+    std::string nicknames;
     std::vector<Client *>::const_iterator it;
 
     for (it = this->_clients.begin(); it != this->_clients.end(); it++)
     {
-        nicknames.push_back((*it)->getNick());
+        nicknames += (*it)->getNick();
+        nicknames += " ";
     }
     return (nicknames);
 }
