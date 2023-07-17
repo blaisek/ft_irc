@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/17 21:10:36 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 21:32:50 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,29 @@ std::string	Server::_channelMode(Request& req, int fd)
 					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
 				if (!this->_channels[req.params[0]]->hasNickname(req.params[2]))
 					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel.\r\n"));
+				// :saeby!~laendrun@freenode-mkd.ame.j38t7t.IP MODE #chaton +o :laendrun
 				if (setMode)
+				{
 					this->_channels[req.params[0]]->addOperator(this->_channels[req.params[0]]->getClient(req.params[2]));
+					std::string ret = ":" + this->_clients[fd]->getNick();
+					ret.append("!~" + this->_clients[fd]->getUser());
+					ret.append("@" + this->_clients[fd]->getIp());
+					ret.append(" MODE " + req.params[0] + " +o");
+					ret.append(" :" + req.params[2]);
+					ret.append("\r\n");
+					this->sendMessageToChannelUsers(req.params[0], ret, fd);
+				}
 				else
+				{
 					this->_channels[req.params[0]]->removeOperator(this->_channels[req.params[0]]->getClient(req.params[2]));
+					std::string ret = ":" + this->_clients[fd]->getNick();
+					ret.append("!~" + this->_clients[fd]->getUser());
+					ret.append("@" + this->_clients[fd]->getIp());
+					ret.append(" MODE " + req.params[0] + " -o");
+					ret.append(" :" + req.params[2]);
+					ret.append("\r\n");
+					this->sendMessageToChannelUsers(req.params[0], ret, fd);
+				}
 			}
 			if (modes[i] == 'k' && req.params[1][0] == '+')
 			{
