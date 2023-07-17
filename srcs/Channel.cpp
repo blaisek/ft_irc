@@ -171,6 +171,23 @@ bool Channel::hasPassword(void) const
     return (true);
 }
 
+bool Channel::find(int fd) {
+    std::vector<Client *>::iterator it;
+
+    for (it = this->_clients.begin(); it != this->_clients.end(); it++) {
+        if ((*it)->getFd() == fd)
+            return (true);
+    }
+    return (false);
+}
+
+bool Channel::empty() const {
+    if (this->_clients.empty())
+        return (true);
+    return (false);
+}
+
+
 void	Channel::removeUser(std::string nick)
 {
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
@@ -214,12 +231,12 @@ std::string	Channel::getModes(void) const
 
 bool	Channel::getMode(char mode) const
 {
-	for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
-	{
-		if (it->first == mode)
-			return (it->second);
-	}
-	return (false);
+    for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+    {
+        if (it->first == mode)
+            return (it->second);
+    }
+    return (false);
 }
 
 void	Channel::setLimit(int limit) { this->_limit = limit; }
@@ -256,4 +273,17 @@ bool	Channel::isOp(std::string nick) const
 			return (true);
 	}
 	return (false);
+}
+
+void Channel::removeNickname(std::string nickname) {
+    if(!this->_nicknames.empty()) {
+        std::vector<std::string>::iterator it;
+        it = std::find(this->_nicknames.begin(), this->_nicknames.end(), nickname);
+        if (it != this->_nicknames.end())
+            this->_nicknames.erase(it);
+    }
+}
+
+std::string Channel::getTopic() const {
+    return (this->_topic);
 }

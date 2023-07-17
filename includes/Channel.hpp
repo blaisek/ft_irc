@@ -35,6 +35,7 @@ class Channel
         void addMode(std::string mode);
         void removeMode(std::string mode);
         std::string			getModes(void) const;
+        bool				getMode(char mode) const;
         void addClient(Client *client);
         std::vector<Client *> getClients(void) const;
         void addOperator(Client *client);
@@ -46,8 +47,6 @@ class Channel
         std::vector<int> getInvite(void) const;
 		void				removeUser(std::string nick);
 		void				setMode(char mode, bool setMode);
-		std::string			getModes(void) const;
-		bool				getMode(char mode) const;
 		void				setLimit(int limit);
 		int					getLimit(void) const;
 		void				addInvited(std::string nick);
