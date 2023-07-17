@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/17 19:23:58 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 20:05:42 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,17 @@ void Channel::removeClient(Client *client)
 std::vector<Client *> Channel::getClients(void) const
 {
     return (this->_clients);
+}
+
+Client*	Channel::getClient(std::string nick) const
+{
+	std::vector<Client *>::const_iterator it;
+	for (it = this->_clients.begin(); it != this->_clients.end(); it++)
+	{
+		if ((*it)->getNick() == nick)
+			return (*it);
+	}
+	return (nullptr);
 }
 
 void Channel::setPassword(std::string password)

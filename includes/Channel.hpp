@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/16 17:47:25 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 20:05:46 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ class Channel
 		std::vector<std::string>	getInvited(void) const;
 		bool				isInvited(std::string nick) const;
 		bool				isOp(std::string nick) const;
+		Client*				getClient(std::string nick) const;
         bool hasNickname(std::string nickname) const;
         bool find(int fd);
         bool empty(void) const;

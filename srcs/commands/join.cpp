@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/17 05:57:04 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/17 20:11:15 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void Server::sendJoinResponses(int fd, const std::string& nick, const std::strin
     send(fd, response.c_str(), response.length(), 0);
 
     // 4
-    response = ":" + hostname + " 324 " + nick + " " + channel_name + " [+n]\r\n";
+    response = ":" + hostname + " 324 " + nick + " " + channel_name + "\r\n";
     send(fd, response.c_str(), response.length(), 0);
 
     // 5

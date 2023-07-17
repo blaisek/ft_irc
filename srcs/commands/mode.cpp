@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 16:38:36 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 21:10:36 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,8 +102,17 @@ std::string	Server::_channelMode(Request& req, int fd)
 		for (unsigned int i = 0; i < modes.size(); i++)
 		{
 			bool setMode = req.params[1][0] == '+' ? true : false;
-			if (setMode && modes[i] == 'o')
-				continue ;
+			if (modes[i] == 'o')
+			{
+				if (req.params.size() < 3)
+					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
+				if (!this->_channels[req.params[0]]->hasNickname(req.params[2]))
+					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick / channel.\r\n"));
+				if (setMode)
+					this->_channels[req.params[0]]->addOperator(this->_channels[req.params[0]]->getClient(req.params[2]));
+				else
+					this->_channels[req.params[0]]->removeOperator(this->_channels[req.params[0]]->getClient(req.params[2]));
+			}
 			if (modes[i] == 'k' && req.params[1][0] == '+')
 			{
 				if (req.params.size() < 3)
@@ -126,9 +135,19 @@ std::string	Server::_channelMode(Request& req, int fd)
 			chdModes.append(std::string(1, modes[i]));
 			this->_channels[req.params[0]]->setMode(modes[i], setMode);
 		}
+		std::string ret = ":" + this->_clients[fd]->getNick();
+		ret.append("!~" + this->_clients[fd]->getUser());
+		ret.append("@" + this->_clients[fd]->getIp());
+		ret.append(" MODE " + req.params[0]);
 		if (trailing != "")
-			return (":" + this->_clients[fd]->getNick() + " MODE " + req.params[0] + " " + chdModes + " :" + trailing + "\r\n");
-		return (":" + this->_clients[fd]->getNick() + " MODE " + req.params[0] + " " + chdModes + "\r\n");
+		{
+			ret.append(" " + chdModes);
+			ret.append(" :" + trailing);
+		}
+		else
+			ret.append(" :" + chdModes);
+		ret.append("\r\n");
+		return (ret);
 	}
 	return ("");
 }
