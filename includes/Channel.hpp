@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/17 20:05:46 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 22:07:09 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ class Channel
         std::string getNicknamesList(void) const;
         void removeNickname(std::string nickname);
         void addNickname(std::string nickname);
-
+		std::vector<std::string>	getNickNames(void) const;
 
     private:
         Channel(void);

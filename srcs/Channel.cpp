@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/17 20:05:42 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 22:07:12 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -299,4 +299,9 @@ void Channel::removeNickname(std::string nickname) {
 
 std::string Channel::getTopic() const {
     return (this->_topic);
+}
+
+std::vector<std::string>	Channel::getNickNames(void) const
+{
+	return (this->_nicknames);
 }

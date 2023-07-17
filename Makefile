@@ -19,7 +19,8 @@ SRC =	main.cpp \
 		commands/part.cpp\
 		commands/notice.cpp \
 		commands/mode.cpp \
-		commands/invite.cpp
+		commands/invite.cpp\
+		commands/who.cpp
 
 OBJ := $(SRC:%.cpp=%.o)
 
