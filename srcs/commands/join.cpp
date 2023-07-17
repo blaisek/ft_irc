@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/17 20:11:15 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 22:52:10 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,6 +81,7 @@ std::string Server::_cmd_join(Request& req, int fd)
 				return (this->_get_message(nick, ERR_INVITEONLYCHAN, ":" + channel_name + "\r\n"));
 		}
         // Add customer to existing channel
+		channel->addNickname(nick);
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);
         std::string members = this->_channels[channel_name]->getNicknamesList();
