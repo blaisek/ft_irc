@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/16 17:56:43 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 19:23:58 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,6 +153,8 @@ std::string Channel::getNicknamesList(void) const
 
     for (it = this->_clients.begin(); it != this->_clients.end(); it++)
     {
+		if (this->isOp((*it)->getNick()))
+			nicknames += "@";
         nicknames += (*it)->getNick();
         nicknames += " ";
     }

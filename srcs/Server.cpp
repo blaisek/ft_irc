@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 17:24:13 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 19:37:57 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,6 +202,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_quit(req, fd));
     else if (req.cmd == "PART")
         return (this->_cmd_part(req, fd));
+	else if (req.cmd == "INVITE")
+		return (this->_cmd_invite(req, fd));
 	else
 		return ("Unknown command\r\n");
 }

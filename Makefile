@@ -12,14 +12,14 @@ SRC =	main.cpp \
 		Client.cpp \
 		IrcParser.cpp \
 		Request.cpp \
-		commands.cpp \
+		commands/commands.cpp \
 		Channel.cpp \
-		join.cpp \
-		privmsg.cpp\
-		part.cpp\
-		notice.cpp \
-		mode.cpp \
-		invite.cpp
+		commands/join.cpp \
+		commands/privmsg.cpp\
+		commands/part.cpp\
+		commands/notice.cpp \
+		commands/mode.cpp \
+		commands/invite.cpp
 
 OBJ := $(SRC:%.cpp=%.o)
 
@@ -48,3 +48,4 @@ $(OBJ_DIR)%.o: $(SRC_DIR)%.cpp
 
 $(OBJ_DIR):
 	@mkdir $(OBJ_DIR)
+	@mkdir $(OBJ_DIR)/commands
