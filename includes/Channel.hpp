@@ -28,15 +28,13 @@ class Channel
         void setName(std::string name);
         std::string getTopic(void) const;
         void setTopic(std::string topic);
-
         void removeClient(Client *client);
-        bool hasNickname(std::string nick);
-        void addNickname(std::string nick);
-        std::vector<std::string> getNicknames(void) const;
-        void removeNickname(std::string nick);
         void setPassword(std::string password);
         std::string getPassword(void) const;
         bool hasPassword(void) const;
+        void addMode(std::string mode);
+        void removeMode(std::string mode);
+        std::string			getModes(void) const;
         void addClient(Client *client);
         std::vector<Client *> getClients(void) const;
         void addOperator(Client *client);
@@ -57,6 +55,13 @@ class Channel
 		std::vector<std::string>	getInvited(void) const;
 		bool				isInvited(std::string nick) const;
 		bool				isOp(std::string nick) const;
+        bool hasNickname(std::string nickname) const;
+        bool find(int fd);
+        bool empty(void) const;
+        std::string getNicknamesList(void) const;
+        void removeNickname(std::string nickname);
+        void addNickname(std::string nickname);
+
 
     private:
         Channel(void);

@@ -25,6 +25,7 @@ class Client
 
 		int							getFd(void) const;
 		bool						isAuth(void) const;
+        std::string                 getIp(void) const;
 		std::string					getNick(void) const;
 		std::string					getUser(void) const;
 		std::string					getIdentity(void) const;
@@ -36,6 +37,7 @@ class Client
 		std::vector<std::string>	getChans(void);
 
 		void						setAuth(bool auth);
+        void                        setIp(std::string ip);
 		void						setNick(std::string nick);
 		void						setUser(std::string user);
 		void						setIdentity(std::string identity);
@@ -49,6 +51,7 @@ class Client
 	private:
 		int							_fd;
 		bool						_auth;
+        std::string                  _ip;
 		std::string					_nick;
 		std::string					_user;
 		std::string					_identity;

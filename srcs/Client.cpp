@@ -51,6 +51,7 @@ Client::~Client(void)
 
 int			Client::getFd(void) const { return (this->_fd); }
 bool		Client::isAuth(void) const { return (this->_auth); }
+std::string	Client::getIp(void) const { return (this->_ip); }
 std::string	Client::getNick(void) const { return (this->_nick); }
 std::string	Client::getUser(void) const { return (this->_user); }
 std::string	Client::getIdentity(void) const { return (this->_identity); }
@@ -76,6 +77,7 @@ std::string	Client::getModes(void) const
 }
 
 void		Client::setNick(std::string nick) { this->_nick = nick; }
+void        Client::setIp(std::string ip) { this->_ip = ip; }
 void		Client::setUser(std::string user) { this->_user = user; }
 void		Client::setIdentity(std::string identity) { this->_identity = identity; }
 void		Client::setHost(std::string host) { this->_host = host; }

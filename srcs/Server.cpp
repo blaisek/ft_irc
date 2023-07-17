@@ -110,8 +110,11 @@ void	Server::_create_client(void)
 	
 	// and of course, insert a new Client into the servers clients map
 	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
+    this->_clients[fd]->setIp(inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr));
+    struct sockaddr_in* client_addr_in = reinterpret_cast<struct sockaddr_in*>(&client_addr);
+    this->_clients[fd]->setHost(gethostbyaddr(&(client_addr_in->sin_addr), sizeof(client_addr_in->sin_addr), AF_INET)->h_name);
 
-	std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr) << " on file descriptor " << fd << std::endl;
+    std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr) << " on file descriptor " << fd << std::endl;
 	std::string message = "Welcome to our little irc server\n";
 	if (send(fd, message.c_str(), message.length(), 0) < 0)
 		std::cerr << "send() error: " << strerror(errno) << std::endl;
@@ -193,14 +196,12 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_join(req, fd));
 	else if (req.cmd == "PRIVMSG")
 		return (this->_cmd_privmsg(req, fd));
-	else if (req.cmd == "NOTICE")
-		return (this->_cmd_notice(req, fd));
 	else if (req.cmd == "MODE")
 		return (this->_cmd_mode(req, fd));
-	else if (req.cmd == "INVITE")
-		return (this->_cmd_invite(req, fd));
 	else if (req.cmd == "QUIT")
 		return (this->_cmd_quit(req, fd));
+    else if (req.cmd == "PART")
+        return (this->_cmd_part(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
@@ -220,6 +221,68 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	o << "========================================" << std::endl;
 	return (o);
 }
+
+void Server::sendMessageToChannelUsers(const std::string& channel_name, const std::string& message, int fd)
+{
+    int send_ret;
+    std::map<std::string, Channel*>::iterator it = this->_channels.find(channel_name);
+    if (it != this->_channels.end())
+    {
+        Channel *channel = it->second;
+        std::vector<Client*> clients = channel->getClients();
+        std::vector<Client*>::iterator it;
+        for (it = clients.begin(); it != clients.end(); ++it)
+        {
+            Client *client = *it;
+            int client_fd = client->getFd();
+            std::string client_nick = client->getNick();
+            if (client_fd != fd){
+                send_ret = send(client_fd, message.c_str(), message.length(), 0);
+                if (send_ret < 0)
+                    std::cerr << "send() error: " << strerror(errno) << std::endl;
+            }
+        }
+    }
+    else
+    {
+        std::cerr << "Channel not found: " << channel_name << std::endl;
+    }
+}
+
+
+void Server::sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd)
+{
+    int send_ret;
+    Client* targetClient = NULL;
+
+    // looking for the client by nickname
+    std::map<int, Client*>::iterator it;
+    for (it = this->_clients.begin(); it != this->_clients.end(); ++it)
+    {
+        Client* client = it->second;
+        if (client->getNick() == userNickname)
+        {
+            targetClient = client;
+            break;
+        }
+    }
+
+    if (targetClient != NULL)
+    {
+        int target_fd = targetClient->getFd();
+        if (target_fd != fd)
+        {
+            send_ret = send(target_fd, message.c_str(), message.length(), 0);
+            if (send_ret < 0)
+                std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
+    }
+    else
+    {
+        std::cerr << "User not found: " << userNickname << std::endl;
+    }
+}
+
 
 std::string Server::getChannelNames(void) const
 {

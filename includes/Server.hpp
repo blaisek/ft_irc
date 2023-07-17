@@ -36,7 +36,7 @@ class Server
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
 		void			sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
-		void			removeChannel(std::string chanName);
+        void			sendJoinResponses(int fd, const std::string& nick, const std::string& user_name, const std::string& ip, const std::string& channel_name, const std::string& members, const std::string& hostname);
 
 	private:
 		std::string							_name;
@@ -71,6 +71,7 @@ class Server
 		std::string				_cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
+        std::string             _cmd_part(Request& req, int fd);
 		std::string				_cmd_notice(Request& req, int fd);
 		std::string				_cmd_invite(Request& req, int fd);
 
