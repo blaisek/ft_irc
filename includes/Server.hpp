@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 17:21:54 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/17 21:17:56 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ class Server
         std::string             _cmd_part(Request& req, int fd);
 		std::string				_cmd_notice(Request& req, int fd);
 		std::string				_cmd_invite(Request& req, int fd);
+		std::string				_cmd_who(Request& req, int fd);
 
 		std::string				_userMode(Request& req, int fd);
 		std::string				_channelMode(Request& req, int fd);
