@@ -221,3 +221,7 @@ void Channel::removeNickname(std::string nickname) {
 void Channel::addNickname(std::string nickname) {
    this->_nicknames.push_back(nickname);
 }
+
+std::string Channel::getTopic() const {
+    return (this->_topic);
+}

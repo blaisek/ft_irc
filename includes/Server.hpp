@@ -36,6 +36,7 @@ class Server
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
 		void			sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
+        void			sendJoinResponses(int fd, const std::string& nick, const std::string& user_name, const std::string& ip, const std::string& channel_name, const std::string& members, const std::string& hostname);
 
 	private:
 		std::string							_name;

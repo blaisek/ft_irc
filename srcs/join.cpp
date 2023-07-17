@@ -3,14 +3,53 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: saeby <saeby>                              +#+  +:+       +#+        */
+/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/02 07:34:50 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/06 19:15:08 by saeby            ###   ########.fr       */
+/*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
+/*   Updated: 2023/07/17 05:57:04 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "irc.hpp"
+
+void Server::sendJoinResponses(int fd, const std::string& nick, const std::string& user_name, const std::string& ip,
+                       const std::string& channel_name, const std::string& members,
+                       const std::string& hostname)
+{
+    std::string message = ":" + nick+ "!~"+ user_name + '@'+ ip + " JOIN " + channel_name + "\r\n";
+    std::string response;
+    std::string topic = this->_channels[channel_name]->getTopic();
+    // 1
+    response = message;
+    send(fd, response.c_str(), response.length(), 0);
+
+    // 2
+    response = ":" + hostname + " 353 " + nick + " @ " + channel_name + " :" + members + "\r\n";
+    send(fd, response.c_str(), response.length(), 0);
+
+    // 3
+    response = ":" + hostname + " 366 " + nick + " " + channel_name + " :End of NAMES list\r\n";
+    send(fd, response.c_str(), response.length(), 0);
+
+    // 4
+    response = ":" + hostname + " 324 " + nick + " " + channel_name + " [+n]\r\n";
+    send(fd, response.c_str(), response.length(), 0);
+
+    // 5
+    if (!topic.empty())
+    {
+        response = ":" + hostname + " 332 " + user_name + " " + channel_name + " :" + topic + "\r\n";
+        send(fd, response.c_str(), response.length(), 0);
+    }
+
+    // 6
+    response = ":" + hostname + " 333 " + user_name + " " + channel_name + " " + nick + " 0\r\n";
+    send(fd, response.c_str(), response.length(), 0);
+
+    // Send a notification message to other channel users
+    sendMessageToChannelUsers(channel_name, message, fd);
+}
 
 
 std::string Server::_cmd_join(Request& req, int fd)
@@ -19,8 +58,10 @@ std::string Server::_cmd_join(Request& req, int fd)
     std::string key = req.params[1];
 
     std::string nick = this->_clients[fd]->getNick();
-    // ajouter user name et list of members
+    std::string hostname = this->_clients[fd]->getHost();
     std::string user_name = this->_clients[fd]->getUser();
+    std::string ip = this->_clients[fd]->getIp();
+
 
     // check if the channel already exists
     if (this->_channels.find(channel_name) != this->_channels.end())
@@ -37,13 +78,8 @@ std::string Server::_cmd_join(Request& req, int fd)
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);
         std::string members = this->_channels[channel_name]->getNicknamesList();
-        std::string message = ":" + nick+  " JOIN " + channel_name  +"\r\n";
-        // Send a notification message to other channel users
-        sendMessageToChannelUsers(channel_name, message, fd);
-
-
-        return (message);
-
+        sendJoinResponses(fd, nick, user_name, ip, channel_name, members, hostname);
+        return"";
     }
     else
     {
@@ -68,12 +104,8 @@ std::string Server::_cmd_join(Request& req, int fd)
         channel->addClient(this->_clients[fd]);
 		this->_clients[fd]->join(channel_name);
         std::string members = this->_channels[channel_name]->getNicknamesList();
-        std::string message = ":" + nick+  " JOIN " + channel_name + "\r\n";
-        // Send a notification message to other channel users
-        sendMessageToChannelUsers(channel_name, message, fd);
-
-
-        return (message);
+        sendJoinResponses(fd, nick, user_name, ip, channel_name, members, hostname);
+        return"";
     }
 }
 

@@ -110,8 +110,11 @@ void	Server::_create_client(void)
 	
 	// and of course, insert a new Client into the servers clients map
 	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
+    this->_clients[fd]->setIp(inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr));
+    struct sockaddr_in* client_addr_in = reinterpret_cast<struct sockaddr_in*>(&client_addr);
+    this->_clients[fd]->setHost(gethostbyaddr(&(client_addr_in->sin_addr), sizeof(client_addr_in->sin_addr), AF_INET)->h_name);
 
-	std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr) << " on file descriptor " << fd << std::endl;
+    std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr) << " on file descriptor " << fd << std::endl;
 	std::string message = "Welcome to our little irc server\n";
 	if (send(fd, message.c_str(), message.length(), 0) < 0)
 		std::cerr << "send() error: " << strerror(errno) << std::endl;
