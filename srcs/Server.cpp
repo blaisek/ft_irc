@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/17 22:35:13 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/18 11:34:53 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -206,6 +206,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_invite(req, fd));
 	else if (req.cmd == "WHO")
 		return (this->_cmd_who(req, fd));
+	else if (req.cmd == "TOPIC")
+		return (this->_cmd_topic(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
