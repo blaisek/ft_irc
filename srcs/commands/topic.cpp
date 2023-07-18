@@ -46,7 +46,6 @@ std::string Server::_cmd_topic(Request& req, int fd)
     {
         msg = ":" + nick + " TOPIC " + channel + " :" + this->_channels[channel]->getTopic() + "\r\n";
         this->sendMessageToChannelUsers(channel,msg,fd);
+        return msg;
     }
-
-    return ("");
 }
