@@ -12,7 +12,7 @@
 
 #ifndef ERRORS_HPP
 # define ERRORS_HPP
-
+# define ERR_UNKNOWNERROR "400"
 # define ERR_NOSUCHNICK "401"
 # define ERR_NOSUCHSERVER "402"
 # define ERR_NOSUCHCHANNEL "403"
@@ -57,5 +57,6 @@
 # define ERR_NOOPERHOST "491"
 # define ERR_UMODEUNKNOWNFLAG "501"
 # define ERR_USERSDONTMATCH "502"
+
 
 #endif
