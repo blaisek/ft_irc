@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/19 16:48:12 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:34:58 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class Channel
 
 		void				ban(std::string nick, std::string bannedBy);
 		void				unban(std::string nick);
+		bool				isBanned(std::string nick);
 
     private:
         Channel(void);

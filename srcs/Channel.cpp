@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/19 17:06:09 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:36:21 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -300,4 +300,14 @@ void	Channel::ban(std::string nick, std::string bannedBy)
 void	Channel::unban(std::string nick)
 {
 	this->_bannedNick.erase(nick);
+}
+
+bool	Channel::isBanned(std::string nick)
+{
+	for (std::map<std::string, std::string>::iterator it = this->_bannedNick.begin(); it != this->_bannedNick.end(); it++)
+	{
+		if (nick + "!*@*" == it->first)
+			return (true);
+	}
+	return (false);
 }

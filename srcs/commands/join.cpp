@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/17 22:52:10 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:42:46 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,16 +63,26 @@ std::string Server::_cmd_join(Request& req, int fd)
     std::string ip = this->_clients[fd]->getIp();
 
 
-    // check if the channel already exists
-    if (this->_channels.find(channel_name) != this->_channels.end())
-    {
-        Channel* channel = this->_channels[channel_name];
+	// check if the channel already exists
+	if (this->_channels.find(channel_name) != this->_channels.end())
+	{
+		Channel* channel = this->_channels[channel_name];
 
-        // Check if the channel requires a key and if the provided key is correct
-        if (channel->hasPassword() && channel->getPassword() != key)
-        {
-            return (this->_get_message(nick, ERR_BADCHANNELKEY, ":Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
-        }
+		// Check if the channel requires a key and if the provided key is correct
+		if (channel->hasPassword() && channel->getPassword() != key)
+			return (this->_get_message(nick, ERR_BADCHANNELKEY, ":Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
+		
+		// check if user is banned
+		// :ft_irc ERR_BANNEDFROMCHAN(474) <nick> <channel_name> :Cannot join channel (you're banned)\r\n
+		if (channel->isBanned(nick))
+		{
+			std::string ret = ":" + this->_name + " ";
+			ret.append(ERR_BANNEDFROMCHAN );
+			ret.append(" " + this->_clients[fd]->getNick());
+			ret.append(" " + channel_name);
+			ret.append(" :Cannot join channel (you're banned)\r\n");
+			return (ret);
+		}
 
 		if (channel->getMode('i'))
 		{
