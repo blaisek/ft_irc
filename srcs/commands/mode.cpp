@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/17 21:32:50 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:13:50 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,8 +91,10 @@ std::string	Server::_channelMode(Request& req, int fd)
 		bool	validMode = true;
 		std::string	chdModes;
 		std::string	trailing = "";
-		if (req.params[1][0] != '-' && req.params[1][0] != '+')
+		if (req.params[1][0] != '-' && req.params[1][0] != '+' && req.params[1][0] != 'b')
 			return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
+		if (req.params[1][0] == 'b')
+			return (this->_sendBanList(req, fd));
 		std::vector<char>	modes = this->_splitModes(req.params[1]);
 		chdModes.append(std::string(1, req.params[1][0]));
 		char m = this->_validChannelMode(modes, validMode);
@@ -132,24 +134,51 @@ std::string	Server::_channelMode(Request& req, int fd)
 					this->sendMessageToChannelUsers(req.params[0], ret, fd);
 				}
 			}
-			if (modes[i] == 'k' && req.params[1][0] == '+')
+			if (modes[i] == 'b')
+			{
+				if (req.params.size() < 3)
+					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
+				std::string bret = ":" + this->_clients[fd]->getNick();
+				bret.append("!~" + this->_clients[fd]->getUser());
+				bret.append("@" + this->_clients[fd]->getIp());
+				if (setMode)
+				{
+					// ban user
+					this->_channels[req.params[0]]->ban(req.params[2] + "!*@*", this->_clients[fd]->getNick());
+					bret.append(" MODE " + req.params[0] + " +b");
+					bret.append(" :" + req.params[2] + "!*@*");
+					bret.append("\r\n");
+					return (bret);
+				}
+				else
+				{
+					// unban user
+					this->_channels[req.params[0]]->unban(req.params[2]);
+					bret.append(" MODE " + req.params[0] + " -b");
+					bret.append(" :" + req.params[2] + "!*@*");
+					bret.append("\r\n");
+					return (bret);
+				}
+				
+			}
+			if (modes[i] == 'k' && setMode)
 			{
 				if (req.params.size() < 3)
 					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
 				this->_channels[req.params[0]]->setPassword(req.params[2]);
 				trailing = req.params[2];
 			}
-			else if (modes[i] == 'k' && req.params[1][0] == '-')
+			else if (modes[i] == 'k' && !setMode)
 				this->_channels[req.params[0]]->setPassword("");
 
-			if (modes[i] == 'l' && req.params[1][0] == '+')
+			if (modes[i] == 'l' && setMode)
 			{
 				if (req.params.size() < 3)
 					return (this->_get_message(this->_clients[fd]->getNick(), ERR_NEEDMOREPARAMS, ":Not enough parameters given.\r\n"));
 				this->_channels[req.params[0]]->setLimit(std::atoi(req.params[2].c_str()));
 				trailing = req.params[2];
 			}
-			else if (modes[i] == 'l' && req.params[1][0] == '-')
+			else if (modes[i] == 'l' && !setMode)
 				this->_channels[req.params[0]]->setLimit(0);
 			chdModes.append(std::string(1, modes[i]));
 			this->_channels[req.params[0]]->setMode(modes[i], setMode);
@@ -169,4 +198,37 @@ std::string	Server::_channelMode(Request& req, int fd)
 		return (ret);
 	}
 	return ("");
+}
+
+std::string	Server::_sendBanList(Request& req, int fd)
+{
+	(void) fd;
+	std::string end = ":" + this->_name + " ";
+	end.append(RPL_ENDOFBANLIST);
+	end.append(" " + req.params[0]);
+	end.append(" :End of ban list\r\n");
+	// check if there are some banned user in channel req.params[0]
+	// if not => RPL_ENDOFBANLIST :End of channel ban list
+	//     :ft_irc 368(RPL_ENDOFBANLIST) <nick> #<chan_name> :End of channel ban list
+	// if nick(s) in banlist, for each nick :
+	//     :ft_irc 367(RPL_BANLIST) <nick> #<chan_name> <banned_nick>!*@* <banned_by_nick>
+	std::map<std::string, std::string> banned = this->_channels[req.params[0]]->getBanned();
+	if (!banned.size())
+		return (end);
+	else
+	{
+		std::string	list;
+		for (std::map<std::string, std::string>::iterator it = banned.begin(); it != banned.end(); it++)
+		{
+			std::string	tmp = ":" + this->_name + " ";
+			tmp.append(RPL_BANLIST);
+			tmp.append(" " + this->_clients[fd]->getNick() + " ");
+			tmp.append(req.params[0] + " ");
+			tmp.append(it->first + " ");
+			tmp.append(it->second + "\r\n");
+			list.append(tmp);
+		}
+		list.append(end);
+		return (list);
+	}
 }

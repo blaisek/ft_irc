@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 16:15:34 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/19 16:59:49 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -347,7 +347,7 @@ char	Server::_validUserMode(std::vector<char> modes, bool &validMode)
 
 char	Server::_validChannelMode(std::vector<char> modes, bool &validMode)
 {
-	std::string validModes = "itkol";
+	std::string validModes = "itkolb";
 	for (unsigned int i = 0; i < modes.size(); i++)
 	{
 		if (validModes.find(modes[i]) == std::string::npos)

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/19 13:07:45 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:36:21 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,23 +121,9 @@ void Channel::removeOperator(Client *client)
         this->_operators.erase(it);
 }
 
-void Channel::addBanned(int fd)
+std::map<std::string, std::string>	Channel::getBanned(void) const
 {
-    this->_banned.push_back(fd);
-}
-
-std::vector<int> Channel::getBanned(void) const
-{
-    return (this->_banned);
-}
-
-void Channel::removeBanned(int fd)
-{
-    std::vector<int>::iterator it;
-
-    it = std::find(this->_banned.begin(), this->_banned.end(), fd);
-    if (it != this->_banned.end())
-        this->_banned.erase(it);
+	return (this->_bannedNick);
 }
 
 bool Channel::hasNickname(std::string nickname) const
@@ -304,4 +290,24 @@ std::string Channel::getTopic() const {
 std::vector<std::string>	Channel::getNickNames(void) const
 {
 	return (this->_nicknames);
+}
+
+void	Channel::ban(std::string nick, std::string bannedBy)
+{
+	this->_bannedNick.insert(std::pair<std::string, std::string>(nick, bannedBy));
+}
+
+void	Channel::unban(std::string nick)
+{
+	this->_bannedNick.erase(nick);
+}
+
+bool	Channel::isBanned(std::string nick)
+{
+	for (std::map<std::string, std::string>::iterator it = this->_bannedNick.begin(); it != this->_bannedNick.end(); it++)
+	{
+		if (nick + "!*@*" == it->first)
+			return (true);
+	}
+	return (false);
 }
