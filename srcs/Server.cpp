@@ -372,3 +372,5 @@ bool	Server::isOp(std::string nick) const
 	}
 	return (false);
 }
+
+

@@ -30,12 +30,18 @@ class Client
 		std::string					getUser(void) const;
 		std::string					getIdentity(void) const;
 		std::string					getHost(void) const;
+        std::string                 getChannelsNames(void);
 		bool						getReg(void) const;
 		std::string					getFullName(void) const;
 		std::string					getModes(void) const;
+        bool				        getMode(char mode) const;
 		bool						isOp(void) const;
 		std::vector<std::string>	getChans(void);
+        time_t                      getIdleTime() const;
+        std::string                 getSignOnTime() const;
 
+        void                        setIdleTime();
+        void                        setSignOnTime();
 		void						setAuth(bool auth);
         void                        setIp(std::string ip);
 		void						setNick(std::string nick);
@@ -61,6 +67,9 @@ class Client
 		bool						_srvOperator;
 		std::map<char, bool>		_modes;
 		std::vector<std::string>	_channels;
+        std::string                 _channelsNames;
+        time_t                      _idleTime;
+        std::string                 _signOnTime;
 };
 
 std::ostream	&operator<<(std::ostream const &o, Client &c);

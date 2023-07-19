@@ -13,20 +13,24 @@
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("") , _srvOperator(false)
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul") , _srvOperator(false)
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
 	this->_modes.insert(std::make_pair('w', false));
 	this->_modes.insert(std::make_pair('o', false));
+    this->setIdleTime();
+    this->setSignOnTime();
 }
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName(""), _srvOperator(false)
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul"), _srvOperator(false)
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
 	this->_modes.insert(std::make_pair('w', false));
 	this->_modes.insert(std::make_pair('o', false));
+    this->setIdleTime();
+    this->setSignOnTime();
 }
 
 // Copy constructor
@@ -96,6 +100,46 @@ void		Client::leave(std::string channelName)
 {
 	this->_channels.erase(std::remove(this->_channels.begin(), this->_channels.end(), channelName), this->_channels.end());
 }
+
+bool Client::getMode(char mode) const {
+    for (std::map<char, bool>::const_iterator it = this->_modes.begin(); it != this->_modes.end(); it++)
+    {
+        if (it->first == mode)
+            return (it->second);
+    }
+    return (false);
+}
+
+time_t Client::getIdleTime() const {
+    time_t now = time(0);
+    time_t idle = now - this->_idleTime;
+    return (idle);
+}
+
+
+void Client::setIdleTime() {
+    this->_idleTime = time(0);
+}
+
+std::string Client::getChannelsNames()  {
+    this->_channelsNames = "";
+    for (std::vector<std::string>::const_iterator it = this->_channels.begin(); it != this->_channels.end(); ++it) {
+        this->_channelsNames += *it;
+        this->_channelsNames += " ";
+    }
+    return this->_channelsNames;
+}
+
+void Client::setSignOnTime() {
+    this->_signOnTime = timestamp();
+}
+
+std::string Client::getSignOnTime() const  {
+
+    return (this->_signOnTime);
+}
+
+
 
 std::ostream &operator<<(std::ostream &o, const Client &c)
 {
