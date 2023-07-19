@@ -23,6 +23,7 @@ SRC =	main.cpp \
 		commands/who.cpp \
 		commands/topic.cpp \
 		commands/oper.cpp \
+		commands/kick.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
 

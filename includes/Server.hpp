@@ -80,7 +80,7 @@ class Server
 		std::string				_cmd_who(Request& req, int fd);
 		std::string				_cmd_topic(Request& req, int fd);
 		std::string				_cmd_oper(Request& req, int fd);
-
+		std::string				_cmd_kick(Request& req, int fd);
 		std::string				_userMode(Request& req, int fd);
 		std::string				_channelMode(Request& req, int fd);
 };

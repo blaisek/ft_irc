@@ -213,6 +213,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_oper(req, fd));
 	else if (req.cmd == "NOTICE")
 		return (this->_cmd_notice(req, fd));
+	else if (req.cmd == "KICK")
+		return (this->_cmd_kick(req, fd));
 	else
 		return ("Unknown command\r\n");
 }
