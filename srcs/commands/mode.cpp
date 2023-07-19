@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 17:13:50 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 17:50:30 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,6 +84,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 	}
 	else
 	{
+		if (req.params[1][0] == 'b')
+			return (this->_sendBanList(req, fd));
 		std::vector<Client *>	channelClients = this->_channels[req.params[0]]->getOperators();
 		if (std::find(channelClients.begin(), channelClients.end(), this->_clients[fd]) == channelClients.end())
 			return (this->_get_message(this->_clients[fd]->getNick(), ERR_CHANOPRIVSNEEDED, ":You need channel operators privileges.\r\n"));
@@ -93,8 +95,6 @@ std::string	Server::_channelMode(Request& req, int fd)
 		std::string	trailing = "";
 		if (req.params[1][0] != '-' && req.params[1][0] != '+' && req.params[1][0] != 'b')
 			return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
-		if (req.params[1][0] == 'b')
-			return (this->_sendBanList(req, fd));
 		std::vector<char>	modes = this->_splitModes(req.params[1]);
 		chdModes.append(std::string(1, req.params[1][0]));
 		char m = this->_validChannelMode(modes, validMode);
