@@ -24,6 +24,7 @@ SRC =	main.cpp \
 		commands/topic.cpp \
 		commands/oper.cpp \
 		commands/kick.cpp \
+		commands/die.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
 
