@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:07:01 by saeby             #+#    #+#             */
-/*   Updated: 2023/06/24 19:15:03 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 14:06:35 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ std::vector<Request> IrcParser::parse(std::string message)
 			messages[i] = this->_parsePrefix(messages[i], req);
 
 		messages[i] = this->_parseCmd(messages[i], req);
-		messages[i] = this->_parseParams(messages[i], req);
+		if (!messages[i].empty())
+			messages[i] = this->_parseParams(messages[i], req);
 		ret_vec.push_back(req);
 	}
-
 	return (ret_vec);
 }
 
@@ -76,13 +76,19 @@ std::string	IrcParser::_parsePrefix(std::string message, Request& req)
 // <command> ::= <letter> {<letter>} | <number> <number> <number>
 std::string IrcParser::_parseCmd(std::string message, Request& req)
 {
+	std::cout << "Message in _parseCmd: " << message << std::endl;
+
 	std::string	ret = "";
 	int			i = 0;
 
-	while (message[i] != ' ')
+	while (message[i] && message[i] != ' ')
 		i++;
 	req.cmd = message.substr(0, i);
-	ret = message.substr(i + 1, message.length());
+	std::cout << "req.cmd in _parseCmd: " << req.cmd << std::endl;
+	if (req.cmd.length() == message.length())
+		ret = "";
+	else
+		ret = message.substr(i + 1, message.length());
 	return (ret);
 }
 

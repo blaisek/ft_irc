@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/19 11:35:18 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 13:07:45 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,9 @@ Channel::Channel(std::string name) : _name(name), _topic(""), _password(""), _li
 	// |o|p|s|i|t|n|b|v
 	this->_modes.insert(std::make_pair('o', false));
 	this->_modes.insert(std::make_pair('p', false));
-	this->_modes.insert(std::make_pair('s', false));
+	this->_modes.insert(std::make_pair('s', true));
 	this->_modes.insert(std::make_pair('i', false));
-	this->_modes.insert(std::make_pair('t', true));
+	this->_modes.insert(std::make_pair('t', false));
 	this->_modes.insert(std::make_pair('n', false));
 	this->_modes.insert(std::make_pair('b', false));
 	this->_modes.insert(std::make_pair('v', false));
