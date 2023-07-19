@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 14:37:58 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 12:00:26 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -168,6 +168,7 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 		this->_clients[fd]->leave(chans[j]);
 	}
 
+	this->_operators.erase(std::remove(this->_operators.begin(), this->_operators.end(), nick), this->_operators.end());
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
 	close(fd);
 	this->_remove_client(fd);

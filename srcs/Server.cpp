@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 11:39:39 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 11:52:24 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -209,6 +209,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_who(req, fd));
 	else if (req.cmd == "TOPIC")
 		return (this->_cmd_topic(req, fd));
+	else if (req.cmd == "OPER")
+		return (this->_cmd_oper(req, fd));
 	else
 		return ("Unknown command\r\n");
 }

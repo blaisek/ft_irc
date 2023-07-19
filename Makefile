@@ -19,16 +19,17 @@ SRC =	main.cpp \
 		commands/part.cpp\
 		commands/notice.cpp \
 		commands/mode.cpp \
-		commands/invite.cpp\
-		commands/who.cpp\
-		commands/topic.cpp\
+		commands/invite.cpp \
+		commands/who.cpp \
+		commands/topic.cpp \
+		commands/oper.cpp \
 
 OBJ := $(SRC:%.cpp=%.o)
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC))
 OBJS = $(addprefix $(OBJ_DIR), $(OBJ))
 
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Wfatal-errors #-fsanitize=address
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98 -Wfatal-errors -fsanitize=address
 # CXXFLAGS = -std=c++98
 
 all: $(NAME)
