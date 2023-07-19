@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:49:45 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/17 22:07:09 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 16:48:12 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,10 +41,7 @@ class Channel
         void addOperator(Client *client);
         std::vector<Client *> getOperators(void) const;
         void removeOperator(Client *client);
-        void addBanned(int fd);
-        void removeBanned(int fd);
-        std::vector<int> getBanned(void) const;
-        std::vector<int> getInvite(void) const;
+        std::map<std::string, std::string> getBanned(void) const;
 		void				removeUser(std::string nick);
 		void				setMode(char mode, bool setMode);
 		void				setLimit(int limit);
@@ -63,6 +60,9 @@ class Channel
         void addNickname(std::string nickname);
 		std::vector<std::string>	getNickNames(void) const;
 
+		void				ban(std::string nick, std::string bannedBy);
+		void				unban(std::string nick);
+
     private:
         Channel(void);
         Channel(const Channel& other);
@@ -74,6 +74,7 @@ class Channel
 		std::vector<Client *>			_clients;
 		std::vector<Client *>			_operators;
 		std::vector<std::string>		_invited;
+		std::map<std::string, std::string>	_bannedNick;
         std::vector<int>				_banned;
         std::vector<std::string>		_nicknames;
 		std::map<char, bool>			_modes;

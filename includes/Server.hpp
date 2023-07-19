@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 11:47:59 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 16:04:29 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ class Server
 		char					_validChannelMode(std::vector<char> modes, bool &validMode);
 		void					_sendNoticeToChannel(const std::string& target, const std::string& mes, int fd);
 		void					_sendNoticeToUser(const std::string& target, const std::string& mes, int fd);
+		std::string				_sendBanList(Request& req, int fd);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);
