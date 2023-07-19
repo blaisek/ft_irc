@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/18 11:37:07 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/19 11:38:14 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ class Server
 		std::map<int, Client *>				_clients;
 		std::map<std::string, Channel *>	_channels;
 		std::vector<std::string>			_nicknames;
+		std::string							_oper_pass;
 
 		void					_init_socket(std::string port);
 		void					_create_client(void);

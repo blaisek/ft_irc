@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/18 11:34:53 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/19 11:39:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ Server::Server(void) : _name(), _pass(), _socket(0), _online(0), _max_online(10)
 
 Server::Server(std::string name, std::string pass, std::string port, int max) : _name(name), _pass(pass), _max_online(max)
 {
+	this->_oper_pass = "123";
 	this->_poll_fds = new struct pollfd[this->_max_online];
 	this->_init_socket(port);
 	this->_poll_fds[0].fd = this->_socket;
