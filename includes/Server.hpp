@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 16:04:29 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 18:29:31 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ class Server
 		int				getMaxOnline(void) const;
 		std::string		getPass(void) const;
         std::string     getChannelNames(void) const;
+		bool			isOp(std::string nick) const;
 
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
@@ -74,13 +75,14 @@ class Server
 		std::string				_cmd_privmsg(Request& req, int fd);
 		std::string				_cmd_mode(Request& req, int fd);
 		std::string				_cmd_quit(Request& req, int fd);
-        std::string             _cmd_part(Request& req, int fd);
+		std::string				_cmd_part(Request& req, int fd);
 		std::string				_cmd_notice(Request& req, int fd);
 		std::string				_cmd_invite(Request& req, int fd);
 		std::string				_cmd_who(Request& req, int fd);
 		std::string				_cmd_topic(Request& req, int fd);
 		std::string				_cmd_oper(Request& req, int fd);
 		std::string				_cmd_kick(Request& req, int fd);
+		std::string				_cmd_die(Request& req, int fd);
 		std::string				_userMode(Request& req, int fd);
 		std::string				_channelMode(Request& req, int fd);
 };
