@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 18:29:31 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 23:22:34 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ class Server
 		std::string				_cmd_notice(Request& req, int fd);
 		std::string				_cmd_invite(Request& req, int fd);
 		std::string				_cmd_who(Request& req, int fd);
+		std::string				_cmd_whois(Request& req, int fd);
 		std::string				_cmd_topic(Request& req, int fd);
 		std::string				_cmd_oper(Request& req, int fd);
 		std::string				_cmd_kick(Request& req, int fd);
