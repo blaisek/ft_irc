@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 15:15:49 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 16:15:34 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -213,6 +213,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_oper(req, fd));
 	else if (req.cmd == "NOTICE")
 		return (this->_cmd_notice(req, fd));
+	else if (req.cmd == "KICK")
+		return (this->_cmd_kick(req, fd));
 	else
 		return ("Unknown command\r\n");
 }

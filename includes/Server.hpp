@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 11:47:59 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 16:18:56 by Blaze            ###    42Lausanne.ch    */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,7 +79,7 @@ class Server
 		std::string				_cmd_who(Request& req, int fd);
 		std::string				_cmd_topic(Request& req, int fd);
 		std::string				_cmd_oper(Request& req, int fd);
-
+		std::string				_cmd_kick(Request& req, int fd);
 		std::string				_userMode(Request& req, int fd);
 		std::string				_channelMode(Request& req, int fd);
 };
