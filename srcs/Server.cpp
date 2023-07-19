@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 13:55:30 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 15:15:49 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -137,7 +137,7 @@ void	Server::_handle_request(int i)
 	std::vector<Request>	reqs;
 	int						fd = this->_poll_fds[i].fd;
 	int						n = 0;
-	char					buf[512];
+	char					buf[6000];
 
 	n = recv(fd, &buf, sizeof(buf), 0);
 
@@ -211,6 +211,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_topic(req, fd));
 	else if (req.cmd == "OPER")
 		return (this->_cmd_oper(req, fd));
+	else if (req.cmd == "NOTICE")
+		return (this->_cmd_notice(req, fd));
 	else
 		return ("Unknown command\r\n");
 }

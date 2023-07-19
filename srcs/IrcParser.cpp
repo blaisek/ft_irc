@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/16 14:07:01 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 14:06:35 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/19 15:13:06 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,15 +76,12 @@ std::string	IrcParser::_parsePrefix(std::string message, Request& req)
 // <command> ::= <letter> {<letter>} | <number> <number> <number>
 std::string IrcParser::_parseCmd(std::string message, Request& req)
 {
-	std::cout << "Message in _parseCmd: " << message << std::endl;
-
 	std::string	ret = "";
 	int			i = 0;
 
 	while (message[i] && message[i] != ' ')
 		i++;
 	req.cmd = message.substr(0, i);
-	std::cout << "req.cmd in _parseCmd: " << req.cmd << std::endl;
 	if (req.cmd.length() == message.length())
 		ret = "";
 	else
@@ -127,7 +124,7 @@ std::string	IrcParser::_parseParams(std::string message, Request& req)
 std::vector<std::string> IrcParser::split(std::string& og_message)
 {
 	std::vector<std::string>	ret_vec;
-	std::string					delim = "\r\n";
+	std::string					delim = "\n";
 	size_t						pos = 0;
 
 	std::string token;
@@ -136,5 +133,8 @@ std::vector<std::string> IrcParser::split(std::string& og_message)
 		ret_vec.push_back(token);
 		og_message.erase(0, pos + delim.length());
 	}
+
+	if (!ret_vec.size())
+		ret_vec.push_back(og_message);
 	return (ret_vec);
 }
