@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 11:40:40 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 13:05:02 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ std::string Server::_cmd_nick(Request& req, int fd)
     (void) req;
     // 1
     if (!this->_clients[fd]->isAuth())
-        return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, "You need to authenticate first.\r\n"));
+		return (":" + this->_name + " " + ERR_PASSWDMISMATCH + " * :You need to authenticate first.\r\n");
 
     // 2
     if (req.params.size() < 1)
@@ -114,7 +114,7 @@ std::string	Server::_cmd_pass(Request& req, int fd)
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_ALREADYREGISTRED, "Already registered.\r\n"));
 	// 3
 	if (this->_pass != req.params[0])
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, "Password mismatch.\r\n"));
+		return (":" + this->_name + " " + ERR_PASSWDMISMATCH + " * :Password mismatch.\r\n");
 	this->_clients[fd]->setAuth(true);
 	return ("");
 }
@@ -131,7 +131,7 @@ std::string	Server::_cmd_user(Request& req, int fd)
 {
 	// 1
 	if (!this->_clients[fd]->isAuth())
-		return (this->_get_message(this->_clients[fd]->getNick(), ERR_PASSWDMISMATCH, ":You need to authenticate first.\r\n"));
+		return (":" + this->_name + " " + ERR_PASSWDMISMATCH + " * :You need to authenticate first.\r\n");
 	// 2
 	if (this->_clients[fd]->getReg())
 		return (this->_get_message(this->_clients[fd]->getNick(), ERR_ALREADYREGISTRED, ":Already registered.\r\n"));
