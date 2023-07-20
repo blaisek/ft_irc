@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/19 17:42:46 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:04:19 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,13 @@ std::string Server::_cmd_join(Request& req, int fd)
 			// invite only channel
 			if (!channel->isInvited(this->_clients[fd]->getNick()))
 				return (this->_get_message(nick, ERR_INVITEONLYCHAN, ":" + channel_name + "\r\n"));
+		}
+
+		if (channel->getMode('l'))
+		{
+			//  :ft_irc ERR_CHANNELISFULL(471) <nick> <channel_name> :Cannot join channel (channel is full)
+			if (channel->getUserCount() == channel->getLimit())
+				return (":" + this->_name + " " + ERR_CHANNELISFULL + " " + this->_clients[fd]->getNick() + " " + channel_name + " :Cannot join channel (channel is full)\r\n");
 		}
         // Add customer to existing channel
 		channel->addNickname(nick);

@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 11:14:09 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:14:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ class Server
 
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
+		void			sendToAllChannelUsers(const std::string & channel_name, const std::string& message);
 		void			sendPrivateMessage(const std::string& userNickname, const std::string& message, int fd );
         void			sendJoinResponses(int fd, const std::string& nick, const std::string& user_name, const std::string& ip, const std::string& channel_name, const std::string& members, const std::string& hostname);
 

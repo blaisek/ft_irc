@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 11:31:36 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:20:15 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 					ret.append(" MODE " + req.params[0] + " +o");
 					ret.append(" :" + req.params[2]);
 					ret.append("\r\n");
-					this->sendMessageToChannelUsers(req.params[0], ret, fd);
+					this->sendToAllChannelUsers(req.params[0], ret);
+					return ("");
 				}
 				else
 				{
@@ -136,7 +137,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 					ret.append(" MODE " + req.params[0] + " -o");
 					ret.append(" :" + req.params[2]);
 					ret.append("\r\n");
-					this->sendMessageToChannelUsers(req.params[0], ret, fd);
+					this->sendToAllChannelUsers(req.params[0], ret);
+					return ("");
 				}
 			}
 			if (modes[i] == 'b')
@@ -153,7 +155,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 					bret.append(" MODE " + req.params[0] + " +b");
 					bret.append(" :" + req.params[2] + "!*@*");
 					bret.append("\r\n");
-					return (bret);
+					this->sendToAllChannelUsers(req.params[0], bret);
+					return ("");
 				}
 				else
 				{
@@ -162,7 +165,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 					bret.append(" MODE " + req.params[0] + " -b");
 					bret.append(" :" + req.params[2] + "!*@*");
 					bret.append("\r\n");
-					return (bret);
+					this->sendToAllChannelUsers(req.params[0], bret);
+					return ("");
 				}
 				
 			}
@@ -200,7 +204,8 @@ std::string	Server::_channelMode(Request& req, int fd)
 		else
 			ret.append(" :" + chdModes);
 		ret.append("\r\n");
-		return (ret);
+		this->sendToAllChannelUsers(req.params[0], ret);
+		return ("");
 	}
 	return ("");
 }
@@ -212,11 +217,6 @@ std::string	Server::_sendBanList(Request& req, int fd)
 	end.append(RPL_ENDOFBANLIST);
 	end.append(" " + req.params[0]);
 	end.append(" :End of ban list\r\n");
-	// check if there are some banned user in channel req.params[0]
-	// if not => RPL_ENDOFBANLIST :End of channel ban list
-	//     :ft_irc 368(RPL_ENDOFBANLIST) <nick> #<chan_name> :End of channel ban list
-	// if nick(s) in banlist, for each nick :
-	//     :ft_irc 367(RPL_BANLIST) <nick> #<chan_name> <banned_nick>!*@* <banned_by_nick>
 	std::map<std::string, std::string> banned = this->_channels[req.params[0]]->getBanned();
 	if (!banned.size())
 		return (end);

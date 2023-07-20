@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 11:15:26 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:14:17 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,6 +264,29 @@ void Server::sendMessageToChannelUsers(const std::string& channel_name, const st
     {
         std::cerr << "Channel not found: " << channel_name << std::endl;
     }
+}
+
+void	Server::sendToAllChannelUsers(const std::string & channel_name, const std::string& message)
+{
+	int send_ret;
+    std::map<std::string, Channel*>::iterator it = this->_channels.find(channel_name);
+    if (it != this->_channels.end())
+    {
+        Channel *channel = it->second;
+        std::vector<Client*> clients = channel->getClients();
+        std::vector<Client*>::iterator it;
+        for (it = clients.begin(); it != clients.end(); ++it)
+        {
+            Client *client = *it;
+            int client_fd = client->getFd();
+            std::string client_nick = client->getNick();
+			send_ret = send(client_fd, message.c_str(), message.length(), 0);
+			if (send_ret < 0)
+				std::cerr << "send() error: " << strerror(errno) << std::endl;
+        }
+    }
+    else
+        std::cerr << "Channel not found: " << channel_name << std::endl;
 }
 
 

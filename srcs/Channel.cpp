@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/12 15:50:51 by btchiman          #+#    #+#             */
-/*   Updated: 2023/07/19 17:36:21 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 11:56:58 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -310,4 +310,9 @@ bool	Channel::isBanned(std::string nick)
 			return (true);
 	}
 	return (false);
+}
+
+int	Channel::getUserCount(void) const
+{
+	return (this->_nicknames.size());
 }
