@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 12:14:39 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 13:43:04 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ class Server
 		int				getOnline(void) const;
 		int				getMaxOnline(void) const;
 		std::string		getPass(void) const;
+		std::string		getOperPass(void) const;
         std::string     getChannelNames(void) const;
 
 		void			start(void);
@@ -64,6 +65,7 @@ class Server
 		void					_sendNoticeToChannel(const std::string& target, const std::string& mes, int fd);
 		void					_sendNoticeToUser(const std::string& target, const std::string& mes, int fd);
 		std::string				_sendBanList(Request& req, int fd);
+		std::string				_receive_data(int i);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);

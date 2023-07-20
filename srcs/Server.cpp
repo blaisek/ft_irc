@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 12:54:34 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 14:09:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,47 +130,56 @@ void	Server::_remove_client(int i)
 	this->_online -= 1;
 }
 
+std::string	Server::_receive_data(int i)
+{
+	int		fd = this->_poll_fds[i].fd;
+	int		n = 0;
+	char	buf[6000];
+	std::string	ret;
+
+	bzero(&buf, sizeof(buf));
+	while (std::string(buf).find('\n') == std::string::npos)
+	{
+		n = recv(fd, &buf, sizeof(buf), 0);
+		std::cout << "Buffer: " << buf << std::endl;
+		if (n == 0)
+		{
+			std::cout << "[" << timestamp() << "]: file descriptor: " << fd << " disconnected." << std::endl;
+			this->_remove_client(i);
+			return ("");
+		}
+		else if (n < 0)
+		{
+			std::cerr << "ERROR: recv() error: " << strerror(errno) << std::endl;
+			this->_remove_client(i);
+			return ("");
+		}
+		ret.append(std::string(buf));
+	}
+	return (ret);
+}
+
 void	Server::_handle_request(int i)
 {
 	IrcParser				parser;
 	std::vector<Request>	reqs;
 	int						fd = this->_poll_fds[i].fd;
-	int						n = 0;
-	char					buf[6000];
 
-	n = recv(fd, &buf, sizeof(buf), 0);
-
-	if (n == 0)
+	std::string buffer = this->_receive_data(i);
+	reqs = parser.parse(buffer);
+	for (unsigned int j = 0; j < reqs.size(); j++)
 	{
-		std::cout << "[" << timestamp() << "]: file descriptor: " << fd << " disconnected." << std::endl;
-		this->_remove_client(i);
-	}
-	else if (n < 0)
-	{
-		std::cerr << "ERROR: recv() error: " << strerror(errno) << std::endl;
-		this->_remove_client(i);
-	}
-	else
-	{
-		// parse request
-		reqs = parser.parse(std::string(buf));
-		for (unsigned int j = 0; j < reqs.size(); j++)
+		// std::cout << reqs[j] << std::endl;
+		if (reqs[j].cmd == "CAP" || !reqs[j].valid)
+			continue ;
+		std::string ret = this->_reply(reqs[j], fd);
+		std::cout << "Reply: " << ret << std::endl;
+		if (reqs[j].cmd != "QUIT")
 		{
-			std::cout << reqs[j] << std::endl;
-			if (reqs[j].cmd == "CAP")
-				continue ;
-			std::string ret = this->_reply(reqs[j], fd);
-			std::cout << "Reply: " << ret << std::endl;
-			if (reqs[j].cmd != "QUIT")
-			{
-				if (send(fd, ret.c_str(), ret.length(), 0) < 0)
-					std::cerr << "send() error: " << strerror(errno) << std::endl;
-			}
+			if (send(fd, ret.c_str(), ret.length(), 0) < 0)
+				std::cerr << "send() error: " << strerror(errno) << std::endl;
 		}
 	}
-	// reset buffer so its empty the next time around
-	bzero(&buf, sizeof(buf));
-
 }
 
 std::string	Server::_get_message(std::string nick, std::string code, std::string message)
@@ -224,6 +233,7 @@ std::string	Server::_reply(Request req, int fd)
 
 std::string	Server::getName(void) const { return (this->_name); }
 std::string	Server::getPass(void) const { return (this->_pass); }
+std::string	Server::getOperPass(void) const { return (this->_oper_pass); }
 int			Server::getOnline(void) const { return (this->_online); }
 int			Server::getMaxOnline(void) const { return (this->_max_online); }
 
@@ -234,7 +244,8 @@ std::ostream &operator<<(std::ostream &o, const Server &s)
 	o << "Online: " << s.getOnline() << std::endl;
 	o << "Max Online: " << s.getMaxOnline() << std::endl;
 	o << "Password: " << s.getPass() << std::endl;
-	o << "========================================" << std::endl;
+	o << "Operator pass: " << s.getOperPass() << std::endl;
+	o << "========================================";
 	return (o);
 }
 
