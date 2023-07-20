@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 13:43:04 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 18:16:01 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,7 @@ class Server
 		void					_sendNoticeToUser(const std::string& target, const std::string& mes, int fd);
 		std::string				_sendBanList(Request& req, int fd);
 		std::string				_receive_data(int i);
+		std::vector<std::string>	_split_str(std::string& og_message, std::string delim);
 
 		// commands in srcs/commands.cpp
 		std::string				_cmd_nick(Request& req, int fd);
@@ -85,6 +86,7 @@ class Server
 		std::string				_cmd_oper(Request& req, int fd);
 		std::string				_cmd_kick(Request& req, int fd);
 		std::string				_cmd_die(Request& req, int fd);
+		std::string				_cmd_list(Request& req, int fd);
 		std::string				_userMode(Request& req, int fd);
 		std::string				_channelMode(Request& req, int fd);
 };

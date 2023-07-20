@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 15:48:22 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 17:15:42 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -226,6 +226,8 @@ std::string	Server::_reply(Request req, int fd)
 		return (this->_cmd_die(req, fd));
 	else if (str_tolower(req.cmd) == "whois")
 		return (this->_cmd_whois(req, fd));
+	else if (str_tolower(req.cmd) == "list")
+		return (this->_cmd_list(req, fd));
 	else
 		return ("\r\n");
 }
@@ -383,7 +385,7 @@ char	Server::_validUserMode(std::vector<char> modes, bool &validMode)
 
 char	Server::_validChannelMode(std::vector<char> modes, bool &validMode)
 {
-	std::string validModes = "itkolb";
+	std::string validModes = "itkolbsp";
 	for (unsigned int i = 0; i < modes.size(); i++)
 	{
 		if (validModes.find(modes[i]) == std::string::npos)
