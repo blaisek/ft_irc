@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   part.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:57:47 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/17 05:58:06 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/20 13:17:03 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,9 @@ std::string Server::_cmd_part(Request& req, int fd)
     {
         if (this->_channels[channel]->find(fd))
         {
-            this->_channels[channel]->removeNickname(nick);
+            this->_channels[channel]->removeUser(nick);
             sendMessageToChannelUsers(channel, message, fd);
             this->_clients[fd]->leave(channel);
-            this->_channels[channel]->removeClient(this->_clients[fd]);
             if(this->_channels[channel]->getNicknamesList().empty())
                 this->_channels.erase(channel);
         }
