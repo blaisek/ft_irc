@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 12:14:17 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:54:34 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,8 +112,7 @@ void	Server::_create_client(void)
 	// and of course, insert a new Client into the servers clients map
 	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
     this->_clients[fd]->setIp(inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr));
-    struct sockaddr_in* client_addr_in = reinterpret_cast<struct sockaddr_in*>(&client_addr);
-    this->_clients[fd]->setHost(gethostbyaddr(&(client_addr_in->sin_addr), sizeof(client_addr_in->sin_addr), AF_INET)->h_name);
+    this->_clients[fd]->setHost(this->_name);
 
     std::cout << "[" << timestamp() << "]: new connection from " << inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr) << " on file descriptor " << fd << std::endl;
 	std::string message = "Welcome to our little irc server\n";

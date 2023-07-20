@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/20 12:04:19 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 12:58:29 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,7 +70,8 @@ std::string Server::_cmd_join(Request& req, int fd)
 
 		// Check if the channel requires a key and if the provided key is correct
 		if (channel->hasPassword() && channel->getPassword() != key)
-			return (this->_get_message(nick, ERR_BADCHANNELKEY, ":Cannot join channel " + channel_name + " (Incorrect key).\r\n"));
+		// :ft_irc ERR_BADCHANNELKEY(475) <nick> <channel_name> :Cannot join channel + " channel_name " + (Incorrect key).\r\n
+			return (":" + this->_name + " " + ERR_BADCHANNELKEY + " " + this->_clients[fd]->getNick() + " " + channel_name + " :Cannot join channel "+ channel_name + " (Incorrect key).\r\n");
 		
 		// check if user is banned
 		// :ft_irc ERR_BANNEDFROMCHAN(474) <nick> <channel_name> :Cannot join channel (you're banned)\r\n
