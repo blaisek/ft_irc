@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/17 05:56:31 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/20 12:58:29 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 17:11:19 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ std::string Server::_cmd_join(Request& req, int fd)
         channel->addNickname(nick);
 
         channel->addOperator(this->_clients[fd]);
-        channel->setTopic("No topic is set");
+        // channel->setTopic("No topic is set");
 
         // Insert channel into channel list
         this->_channels.insert(std::make_pair(channel_name, channel));

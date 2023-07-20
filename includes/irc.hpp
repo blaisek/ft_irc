@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 09:52:46 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 15:20:36 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 18:15:56 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@
 # define HOSTNAME "irc.42lausanne.ch"
 
 // | ============== srcs/utils.cpp ============== |
-void				error(std::string msg, int code);
-const				std::string	timestamp(void);
-std::string			str_tolower(std::string str);
+void						error(std::string msg, int code);
+const						std::string	timestamp(void);
+std::string					str_tolower(std::string str);
 
 #endif
