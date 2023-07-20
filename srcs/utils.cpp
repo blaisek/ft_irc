@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 09:52:09 by saeby             #+#    #+#             */
-/*   Updated: 2023/05/30 13:21:23 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 15:22:59 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,4 +28,12 @@ const std::string	timestamp(void)
 	strftime(buf, sizeof(buf), "%Y-%m-%d.%X", &tstruct);
 
 	return (buf);
+}
+
+std::string		str_tolower(std::string str)
+{
+	std::string	ret;
+	for (unsigned int i = 0; i < str.length(); i++)
+		ret.push_back(std::tolower(str[i]));
+	return (ret);
 }

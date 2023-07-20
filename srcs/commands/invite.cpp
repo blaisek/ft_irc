@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 17:21:03 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 18:03:50 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 15:12:24 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ std::string	Server::_cmd_invite(Request& req, int fd)
 			std::string	mes = ":" + this->_clients[fd]->getNick() + " INVITE " + req.params[0] + " " + req.params[1] + "\r\n";
 			if (send(this->_fdByNick(req.params[0]), mes.c_str(), mes.length(), 0) < 0)
 				std::cerr << "send() error: " << strerror(errno) << std::endl;
-			return (this->_get_message(this->_clients[fd]->getNick(), RPL_INVITING, ":" + req.params[0]));
+			return (":" + this->_name + " " + RPL_INVITING + " " + this->_clients[fd]->getNick() + " " + req.params[0] + " :" + req.params[1] + "\r\n");
 
 		}
 	}

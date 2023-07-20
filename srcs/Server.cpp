@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 14:09:39 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 15:48:22 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,7 +141,6 @@ std::string	Server::_receive_data(int i)
 	while (std::string(buf).find('\n') == std::string::npos)
 	{
 		n = recv(fd, &buf, sizeof(buf), 0);
-		std::cout << "Buffer: " << buf << std::endl;
 		if (n == 0)
 		{
 			std::cout << "[" << timestamp() << "]: file descriptor: " << fd << " disconnected." << std::endl;
@@ -169,7 +168,7 @@ void	Server::_handle_request(int i)
 	reqs = parser.parse(buffer);
 	for (unsigned int j = 0; j < reqs.size(); j++)
 	{
-		// std::cout << reqs[j] << std::endl;
+		std::cout << reqs[j] << std::endl;
 		if (reqs[j].cmd == "CAP" || !reqs[j].valid)
 			continue ;
 		std::string ret = this->_reply(reqs[j], fd);
@@ -193,42 +192,42 @@ std::string	Server::_reply(Request req, int fd)
 {
 	if (!req.valid)
 		return ("Invalid request\r\n");
-	else if (req.cmd == "NICK")
+	else if (str_tolower(req.cmd) == "nick")
 		return (this->_cmd_nick(req, fd));
-	else if (req.cmd == "PASS")
+	else if (str_tolower(req.cmd) == "pass")
 		return (this->_cmd_pass(req, fd));
-	else if (req.cmd == "USER")
+	else if (str_tolower(req.cmd) == "user")
 		return (this->_cmd_user(req, fd));
-	else if (req.cmd == "PING")
+	else if (str_tolower(req.cmd) == "ping")
 		return (this->_cmd_ping(req, fd));
-	else if (req.cmd == "JOIN")
+	else if (str_tolower(req.cmd) == "join")
 		return (this->_cmd_join(req, fd));
-	else if (req.cmd == "PRIVMSG")
+	else if (str_tolower(req.cmd) == "privmsg")
 		return (this->_cmd_privmsg(req, fd));
-	else if (req.cmd == "MODE")
+	else if (str_tolower(req.cmd) == "mode")
 		return (this->_cmd_mode(req, fd));
-	else if (req.cmd == "QUIT")
+	else if (str_tolower(req.cmd) == "quit")
 		return (this->_cmd_quit(req, fd));
-    else if (req.cmd == "PART")
+    else if (str_tolower(req.cmd) == "part")
         return (this->_cmd_part(req, fd));
-	else if (req.cmd == "INVITE")
+	else if (str_tolower(req.cmd) == "invite")
 		return (this->_cmd_invite(req, fd));
-	else if (req.cmd == "WHO")
+	else if (str_tolower(req.cmd) == "who")
 		return (this->_cmd_who(req, fd));
-	else if (req.cmd == "TOPIC")
+	else if (str_tolower(req.cmd) == "topic")
 		return (this->_cmd_topic(req, fd));
-	else if (req.cmd == "OPER")
+	else if (str_tolower(req.cmd) == "oper")
 		return (this->_cmd_oper(req, fd));
-	else if (req.cmd == "NOTICE")
+	else if (str_tolower(req.cmd) == "notice")
 		return (this->_cmd_notice(req, fd));
-	else if (req.cmd == "KICK")
+	else if (str_tolower(req.cmd) == "kick")
 		return (this->_cmd_kick(req, fd));
-	else if (req.cmd == "DIE" || req.cmd == "die")
+	else if (str_tolower(req.cmd) == "die")
 		return (this->_cmd_die(req, fd));
-	else if (req.cmd == "WHOIS")
+	else if (str_tolower(req.cmd) == "whois")
 		return (this->_cmd_whois(req, fd));
 	else
-		return ("Unknown command\r\n");
+		return ("\r\n");
 }
 
 std::string	Server::getName(void) const { return (this->_name); }

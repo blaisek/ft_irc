@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 16:02:39 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/19 16:11:17 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/20 15:50:43 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,9 @@ std::string Server::_cmd_kick(Request& req, int fd)
 	std::string channel_name = req.params[0];
 	std::string target = req.params[1];
     int target_fd = this->_fdByNick(target);
-	std::string nick = this->_clients[fd]->getNick();
-    std::string msg;
+	std::string fnick = this->_clients[fd]->getNick() + "!~" + this->_clients[fd]->getUser() + "@" + this->_clients[fd]->getIp();
+    std::string nick = this->_clients[fd]->getNick();
+	std::string msg;
 
     if(this->_channels.find(channel_name) == this->_channels.end())
     {
@@ -45,10 +46,13 @@ std::string Server::_cmd_kick(Request& req, int fd)
         return (this->_get_message(nick, ERR_CHANOPRIVSNEEDED, "msg"));
     }
     this->_channels[channel_name]->removeNickname(target);
-    msg = ":" + nick + " KICK " + channel_name + " " + target + "\r\n";
-    send(target_fd, msg.c_str(), msg.length(), 0);
+	if (!req.trailing.empty())
+		msg = ":" + fnick + " KICK " + channel_name + " " + target + " :" + req.trailing + "\r\n";
+	else
+	    msg = ":" + fnick + " KICK " + channel_name + " " + target + "\r\n";
+    // send(target_fd, msg.c_str(), msg.length(), 0);
     this->sendMessageToChannelUsers(channel_name,msg,fd);
     this->_clients[target_fd]->leave(channel_name);
-    this->_channels[channel_name]->removeClient(this->_clients[target_fd]);
+    this->_channels[channel_name]->removeUser(this->_clients[target_fd]->getNick());
     return (msg);
 }

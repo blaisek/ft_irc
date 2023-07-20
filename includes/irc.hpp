@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/30 09:52:46 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/16 15:07:38 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 15:20:36 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@
 
 // | ============== srcs/utils.cpp ============== |
 void				error(std::string msg, int code);
-const	std::string	timestamp(void);
+const				std::string	timestamp(void);
+std::string			str_tolower(std::string str);
 
 #endif
