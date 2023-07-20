@@ -48,7 +48,7 @@ Channel &Channel::operator=(const Channel &other)
 
 Channel::~Channel()
 {
-
+    delete this;
     return ;
 }
 

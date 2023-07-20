@@ -50,6 +50,7 @@ Client &Client::operator=(const Client &other)
 // Destructor
 Client::~Client(void)
 {
+    delete this;
 	return ;
 }
 

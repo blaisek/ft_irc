@@ -42,6 +42,9 @@ Server &Server::operator=(const Server &other)
 // Destructor
 Server::~Server(void)
 {
+    delete this->_poll_fds;
+    _clients.clear();
+    _channels.clear();
 	return ;
 }
 
