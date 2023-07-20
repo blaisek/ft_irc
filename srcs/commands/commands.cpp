@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/20 13:05:02 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 13:17:59 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -171,9 +171,11 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 	std::vector<std::string> chans = this->_clients[fd]->getChans();
 	for (unsigned int j = 0; j < chans.size(); j++)
 	{
-		this->_channels[chans[j]]->removeClient(this->_clients[fd]);
+		this->_channels[chans[j]]->removeUser(nick);
 		this->sendMessageToChannelUsers(chans[j], quitmes, fd);
 		this->_clients[fd]->leave(chans[j]);
+		if (this->_channels[chans[j]]->getUserCount() == 0)
+			this->_channels.erase(chans[j]);
 	}
 
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
