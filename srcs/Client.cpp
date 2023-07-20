@@ -6,14 +6,14 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/07 17:39:39 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 11:20:31 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
 // Default constructor
-Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul") , _srvOperator(false)
+Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul")
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
@@ -23,7 +23,7 @@ Client::Client(void) : _fd(), _auth(false), _nick(""), _user(""), _identity(""),
     this->setSignOnTime();
 }
 
-Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul"), _srvOperator(false)
+Client::Client(int fd) : _fd(fd), _auth(false) , _nick(""), _user(""), _identity(""), _host(HOSTNAME), _reg(false), _fullName("Clark Gaybeul")
 {
 	this->_modes.insert(std::make_pair('i', false));
 	this->_modes.insert(std::make_pair('s', false));
@@ -63,7 +63,6 @@ std::string	Client::getHost(void) const { return (this->_host); }
 bool		Client::getReg(void) const { return (this->_reg); }
 std::string	Client::getFullName(void) const { return (this->_fullName); }
 std::vector<std::string>	Client::getChans(void) { return (this->_channels); }
-bool		Client::isOp(void) const { return (this->_srvOperator); }
 
 std::string	Client::getModes(void) const
 {

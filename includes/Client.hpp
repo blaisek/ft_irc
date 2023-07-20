@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 16:18:57 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/06 19:34:03 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 11:19:39 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,6 @@ class Client
 		std::string					_host;
 		bool						_reg;
 		std::string					_fullName;
-		bool						_srvOperator;
 		std::map<char, bool>		_modes;
 		std::vector<std::string>	_channels;
         std::string                 _channelsNames;

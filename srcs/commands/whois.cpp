@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   whois.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: Blaze <btchiman@42lausanne.ch>             +#+  +:+       +#+        */
+/*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/19 23:23:47 by Blaze             #+#    #+#             */
-/*   Updated: 2023/07/19 23:25:24 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/20 11:21:16 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ std::string Server::_cmd_whois(Request &req, int fd) {
     if (this->_clients.find(this->_fdByNick(nick)) == this->_clients.end())
         return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOSUCHNICK, ":No such nick\r\n"));
 
-    if(this->_clients[this->_fdByNick(nick)]->getMode('i') && !this->_clients[fd]->isOp())
+    if(this->_clients[this->_fdByNick(nick)]->getMode('i') && !this->_clients[fd]->getMode('o'))
         return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, ":Permission Denied- You're not an IRC operator\r\n"));
 
     std::string msg = ":" + this->_name + " " + RPL_WHOISUSER + " " + this->_clients[fd]->getNick() + " " +

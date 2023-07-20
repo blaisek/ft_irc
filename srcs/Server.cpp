@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:05:34 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 23:19:14 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/20 11:15:26 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -362,15 +362,3 @@ char	Server::_validChannelMode(std::vector<char> modes, bool &validMode)
 	}
 	return (0);
 }
-
-bool	Server::isOp(std::string nick) const
-{
-	for (unsigned int i = 0; i < this->_operators.size(); i++)
-	{
-		if (this->_operators[i] == nick)
-			return (true);
-	}
-	return (false);
-}
-
-

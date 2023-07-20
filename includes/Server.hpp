@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/10 15:06:17 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 23:22:34 by Blaze            ###    42Lausanne.ch    */
+/*   Updated: 2023/07/20 11:14:09 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ class Server
 		int				getMaxOnline(void) const;
 		std::string		getPass(void) const;
         std::string     getChannelNames(void) const;
-		bool			isOp(std::string nick) const;
 
 		void			start(void);
 		void			sendMessageToChannelUsers(const std::string& channelName, const std::string& message, int fd);
@@ -50,7 +49,6 @@ class Server
 		std::map<std::string, Channel *>	_channels;
 		std::vector<std::string>			_nicknames;
 		std::string							_oper_pass;
-		std::vector<std::string>			_operators;
 
 		void					_init_socket(std::string port);
 		void					_create_client(void);

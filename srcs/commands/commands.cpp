@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/06/24 19:44:58 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 12:00:26 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 11:40:40 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,16 @@ std::string Server::_cmd_nick(Request& req, int fd)
         {
             channelIt->second->removeNickname(oldNick);
             channelIt->second->addNickname(nick);
+			if (channelIt->second->isOp(oldNick))
+			{
+				channelIt->second->removeOperator(channelIt->second->getClient(oldNick));
+				channelIt->second->addOperator(channelIt->second->getClient(nick));
+			}
         }
     }
+
+	// remove nickname from server's nick list
+	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), oldNick), this->_nicknames.end());
 
     // 6
     if (!this->_clients[fd]->getUser().empty())
@@ -168,7 +176,6 @@ std::string	Server::_cmd_quit(Request& req, int fd)
 		this->_clients[fd]->leave(chans[j]);
 	}
 
-	this->_operators.erase(std::remove(this->_operators.begin(), this->_operators.end(), nick), this->_operators.end());
 	this->_nicknames.erase(std::remove(this->_nicknames.begin(), this->_nicknames.end(), nick), this->_nicknames.end());
 	close(fd);
 	this->_remove_client(fd);

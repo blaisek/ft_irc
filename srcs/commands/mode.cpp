@@ -6,7 +6,7 @@
 /*   By: saeby <saeby>                              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/16 14:37:42 by saeby             #+#    #+#             */
-/*   Updated: 2023/07/19 17:50:30 by saeby            ###   ########.fr       */
+/*   Updated: 2023/07/20 11:31:36 by saeby            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,36 @@ std::string	Server::_userMode(Request& req, int fd)
 			return (this->_get_message(this->_clients[fd]->getNick(), RPL_UMODEIS, this->_clients[fd]->getModes()));
 		else
 		{
-			if (this->_clients[fd]->isOp())
+			if (this->_clients[fd]->getMode('o'))
 				return (this->_clients[this->_fdByNick(req.params[0])]->getModes());
 			return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, ":You do not have rights to see other users' mode.\r\n"));
 		}
 	}
 	else
 	{
-		bool	validMode = true;
-		std::string	chdModes;
-		if (req.params[1][0] != '-' && req.params[1][0] != '+')
-			return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
-		std::vector<char>	modes = this->_splitModes(req.params[1]);
-		chdModes.append(std::string(1, req.params[1][0]));
-		char m = this->_validUserMode(modes, validMode);
-		if (!validMode)
-			return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, m) + " :is unknown mode char to me.\r\n"));
-		for (unsigned int i = 0; i < modes.size(); i++)
+		if (req.params[0] == this->_clients[fd]->getNick())
 		{
-			bool setMode = req.params[1][0] == '+' ? true : false;
-			if (setMode && modes[i] == 'o')
-				continue ;
-			chdModes.append(std::string(1, modes[i]));
-			this->_clients[fd]->setMode(modes[i], setMode);
+			bool	validMode = true;
+			std::string	chdModes;
+			if (req.params[1][0] != '-' && req.params[1][0] != '+')
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, req.params[1][0]) + " :is unknown mode char to me.\r\n"));
+			std::vector<char>	modes = this->_splitModes(req.params[1]);
+			chdModes.append(std::string(1, req.params[1][0]));
+			char m = this->_validUserMode(modes, validMode);
+			if (!validMode)
+				return (this->_get_message(this->_clients[fd]->getNick(), ERR_UNKNOWNMODE, std::string(1, m) + " :is unknown mode char to me.\r\n"));
+			for (unsigned int i = 0; i < modes.size(); i++)
+			{
+				bool setMode = req.params[1][0] == '+' ? true : false;
+				if (setMode && modes[i] == 'o')
+					continue ;
+				chdModes.append(std::string(1, modes[i]));
+				this->_clients[fd]->setMode(modes[i], setMode);
+			}
+			return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + chdModes + "\r\n");
 		}
-		return (":" + this->_clients[fd]->getNick() + " MODE " + this->_clients[fd]->getNick() + " " + chdModes + "\r\n");
+		else
+			return (this->_get_message(this->_clients[fd]->getNick(), ERR_NOPRIVILEGES, ":You do not have rights to modify other users' mode.\r\n"));
 	}
 }
 
