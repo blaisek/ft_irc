@@ -49,12 +49,12 @@ To compile the program, use:
 
 - `make`
   To start the Server, use:
-- `./ircserv <port> <password>` - **port**: The port number on which your IRC server will be listening to for incoming IRC connections. - **password**: The connection password. It will be needed by any IRC client that tries to connect to your server.
+- `./ircserv <port> <password>` - **port**: The port number(6667) on which your IRC server will be listening to for incoming IRC connections. - **password**: The connection password. It will be needed by any IRC client that tries to connect to your server.
   To connect to the server, you can use:
 - `nc <IP ADDRESS> <PORT>`
   - **IP ADDRESS**: Host IP address.
   - **PORT**: The PORT that the server listening on.
-- You can also use an IRC Client e.g irssi, WeeChat...
+- but you should use an IRC Client like irssi : `/connect <IP ADDRESS> <PORT>` 
 
 # 🧠 Contributors
 

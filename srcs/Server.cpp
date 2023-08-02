@@ -100,7 +100,17 @@ void	Server::_create_client(void)
 	this->_poll_fds[this->_online].fd = fd;
 	this->_poll_fds[this->_online].events = POLLIN;
 	this->_online++;
-	
+
+    //check if client is already connected
+    for (std::map<int, Client *>::iterator it = this->_clients.begin(); it != this->_clients.end(); it++)
+    {
+        if (it->second->getIp() == inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr))
+        {
+            std::cout << "[" << timestamp() << "]: client already connected" << std::endl;
+            close(fd);
+            return ;
+        }
+    }
 	// and of course, insert a new Client into the servers clients map
 	this->_clients.insert(std::pair<int, Client *>(fd, new Client(fd)));
     this->_clients[fd]->setIp(inet_ntoa(((struct sockaddr_in *)&client_addr)->sin_addr));
