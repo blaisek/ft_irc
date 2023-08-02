@@ -41,7 +41,7 @@ These are the available commands in our IRC Server:
 - **LIST**: /list command enables you to find list of channels on the server.
 - **WHOIS**: /whois nickname, Shows you information about a nickname.
 - **DIE**: /die command kill the server if the user is oper.
-- **OPER**: /oper + password, give root privilege to the user.
+- **OPER**: /oper , gives root privilege to the user and requires the root password.
 
 # ⚙️ Start IRC Server
 
